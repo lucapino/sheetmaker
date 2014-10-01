@@ -8,12 +8,12 @@ package com.github.lucapino.sheetmaker.collectors.tmdb;
 import com.github.lucapino.sheetmaker.collectors.DataRetriever;
 import com.github.lucapino.sheetmaker.model.movie.Movie;
 import com.github.lucapino.sheetmaker.model.tv.Serie;
-import info.movito.themoviedbapi.TmdbApi;
-import info.movito.themoviedbapi.TmdbMovies;
-import info.movito.themoviedbapi.TmdbSearch;
-import info.movito.themoviedbapi.model.Artwork;
-import info.movito.themoviedbapi.model.MovieDb;
-import info.movito.themoviedbapi.model.core.MovieResults;
+import com.omertron.themoviedbapi.TheMovieDbApi;
+import com.omertron.themoviedbapi.model.Artwork;
+import static com.omertron.themoviedbapi.model.ArtworkType.BACKDROP;
+import static com.omertron.themoviedbapi.model.ArtworkType.POSTER;
+import com.omertron.themoviedbapi.model.MovieDb;
+import com.omertron.themoviedbapi.results.TmdbResultsList;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -37,13 +37,17 @@ public class DataRetrieverImpl implements DataRetriever {
     public static String POSTER_SIZE = "w92"; // "original";
     public static String BACKDROP_SIZE = "w300"; // "original";
 
-    private TmdbApi api;
+    private TheMovieDbApi api;
     private String baseUrl;
 
+    public static void main(String[] args) throws Exception {
+        DataRetrieverImpl app = new DataRetrieverImpl();
+        app.retrieve("L'era glaciale");
+    }
 
     public DataRetrieverImpl() throws Exception {
         // use themoviedb api to get info about movie
-        api = new TmdbApi(TMDB_API_KEY);
+        api = new TheMovieDbApi(TMDB_API_KEY);
         baseUrl = api.getConfiguration().getBaseUrl();
         Workbook wb = new HSSFWorkbook(new FileInputStream(new File("/home/tagliani/tmp/HD-report.xls")));
         Sheet sheet = wb.getSheet("HD1");
@@ -60,18 +64,16 @@ public class DataRetrieverImpl implements DataRetriever {
         File folder = new File("/home/tagliani/tmp/movies/" + movieName);
         if (!folder.exists()) {
             folder.mkdir();
-            TmdbSearch search = api.getSearch();
-            MovieResults results = search.searchMovie(movieName, 0, null, false, 0);
+            TmdbResultsList<MovieDb> results = api.searchMovie(movieName, 0, null, false, 0);
             List<MovieDb> movies = results.getResults();
             for (MovieDb movie : movies) {
                 int movieId = movie.getId();
                 File subfolder = new File(folder, "" + movieId);
                 subfolder.mkdir();
                 // get poster and save it
-                MovieDb innerMovie = api.getMovies().getMovie(movieId, null, TmdbMovies.MovieMethod.values());
-
-                List<Artwork> artworks = innerMovie.getImages();
-                for (Artwork artwork : artworks) {
+                
+                TmdbResultsList<Artwork> artworks = api.getMovieImages(movieId, null);
+                for (Artwork artwork : artworks.getResults()) {
                     File bdFolder = new File(subfolder, "backdrops");
                     bdFolder.mkdir();
                     File psFolder = new File(subfolder, "posters");
@@ -87,7 +89,7 @@ public class DataRetrieverImpl implements DataRetriever {
                             break;
                     }
                 }
-                System.out.println(innerMovie.toString());
+                System.out.println(movie.toString());
             }
         }
     }

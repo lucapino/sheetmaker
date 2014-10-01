@@ -8,28 +8,13 @@ package com.github.lucapino.sheetmaker.collectors.movieplayer;
 import com.github.lucapino.sheetmaker.collectors.DataRetriever;
 import com.github.lucapino.sheetmaker.model.movie.Movie;
 import com.github.lucapino.sheetmaker.model.tv.Serie;
-import info.movito.themoviedbapi.TmdbApi;
-import info.movito.themoviedbapi.TmdbMovies;
-import info.movito.themoviedbapi.TmdbSearch;
-import info.movito.themoviedbapi.model.Artwork;
-import info.movito.themoviedbapi.model.MovieDb;
-import info.movito.themoviedbapi.model.core.MovieResults;
 import it.movieplayer.Movieplayer;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
-import org.apache.commons.io.IOUtils;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
 
 /**
  *
