@@ -6,6 +6,7 @@
 package com.github.lucapino.sheetmaker.collectors.movieplayer;
 
 import com.github.lucapino.sheetmaker.collectors.DataRetriever;
+import com.github.lucapino.sheetmaker.model.Artwork;
 import com.github.lucapino.sheetmaker.model.movie.Movie;
 import com.github.lucapino.sheetmaker.model.tv.Serie;
 import it.movieplayer.Movieplayer;
@@ -67,4 +68,15 @@ public class DataRetrieverImpl implements DataRetriever {
     public List<Serie> retrieveTvSerieFromName(String name) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public List<Artwork> getPosters(String id) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<Artwork> getBackdrops(String id) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

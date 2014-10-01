@@ -5,7 +5,6 @@
  */
 package com.github.lucapino.sheetmaker.model.tv;
 
-import com.github.lucapino.sheetmaker.model.Person;
 import java.util.List;
 
 /**
@@ -24,8 +23,8 @@ public interface Serie {
 
     String getOverview();
 
-    List<Person> getCast();
-    
-    List<Person> getDirectors();
+    List<String> getActors();
+
+    List<String> getDirectors();
 // TODO: add images
 }

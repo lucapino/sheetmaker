@@ -5,7 +5,6 @@
  */
 package com.github.lucapino.sheetmaker.collectors.movieplayer;
 
-import com.github.lucapino.sheetmaker.model.Person;
 import com.github.lucapino.sheetmaker.model.tv.Season;
 import com.github.lucapino.sheetmaker.model.tv.Serie;
 import java.util.List;
@@ -42,12 +41,12 @@ public class SerieImpl implements Serie {
     }
 
     @Override
-    public List<Person> getCast() {
+    public List<String> getActors() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public List<Person> getDirectors() {
+    public List<String> getDirectors() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

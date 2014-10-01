@@ -5,10 +5,35 @@
  */
 package com.github.lucapino.sheetmaker.model.movie;
 
+import com.github.lucapino.sheetmaker.model.Artwork;
+import java.util.List;
+
 /**
  *
  * @author Luca Tagliani
  */
 public interface Movie {
-    
+
+    String getTitle();
+
+    String getReleaseDate();
+
+    String getTagline();
+
+    String getPlot();
+
+    String getDuration();
+
+    List<String> getGenres();
+
+    List<String> getActors();
+
+    List<String> getDirectors();
+
+    String getId();
+
+    String getImdbId();
+
+    String getOriginalTitle();
+
 }

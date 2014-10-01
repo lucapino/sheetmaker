@@ -5,6 +5,7 @@
  */
 package com.github.lucapino.sheetmaker.collectors;
 
+import com.github.lucapino.sheetmaker.model.Artwork;
 import com.github.lucapino.sheetmaker.model.movie.Movie;
 import com.github.lucapino.sheetmaker.model.tv.Serie;
 import java.util.List;
@@ -33,5 +34,11 @@ public interface DataRetriever {
 
     // retrieve from name
     List<Serie> retrieveTvSerieFromName(String name);
+    
+    // images
+    
+    List<Artwork> getPosters(String id);
+    
+    List<Artwork> getBackdrops(String id);
 
 }
