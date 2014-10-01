@@ -1,4 +1,4 @@
-package com.github.lucapino.sheetmaker.parsers;
+package com.github.lucapino.sheetmaker.parsers.mediainfo;
 
 /*  Copyright (c) MediaArea.net SARL. All Rights Reserved.
  *
