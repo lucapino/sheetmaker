@@ -17,7 +17,7 @@
  * along with Xuggle-Xuggler-Main.  If not, see <http://www.gnu.org/licenses/>.
  *******************************************************************************/
 
-package it.cbt.wr.mkvinfo;
+package com.github.lucapino.sheetmaker.parsers;
 
 import com.xuggle.xuggler.Configuration;
 import com.xuggle.xuggler.Global;

@@ -3,14 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package it.cbt.wr.mkvinfo;
+package com.github.lucapino.sheetmaker;
 
 import com.xuggle.xuggler.IContainer;
 import com.xuggle.xuggler.IStream;
 import com.xuggle.xuggler.IStreamCoder;
 import java.io.File;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
@@ -20,7 +18,7 @@ import org.apache.commons.lang3.time.DurationFormatUtils;
  *
  * @author Luca Tagliani
  */
-public class App {
+public class XugglerRetriever {
 
     public static void main(String[] args) {
 

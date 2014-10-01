@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package it.cbt.wr.mkvinfo;
+package com.github.lucapino.sheetmaker;
 
+import com.github.lucapino.sheetmaker.parsers.MediaInfo;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
@@ -36,7 +37,6 @@ public class MediaInfoExtractor {
     }
 
     private void print(String rootPath) throws Exception {
-        // lambd-expression!?!?!
         FileFilter filter = new FileFilter() {
 
             @Override
@@ -103,12 +103,12 @@ public class MediaInfoExtractor {
                     row.createCell(4).setCellValue(format);
                     String width = MI.Get(MediaInfo.StreamKind.Video, 0, "Width", MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name);
                     String height = MI.Get(MediaInfo.StreamKind.Video, 0, "Height", MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name);
-                    row.createCell(5).setCellValue(width +"x" + height);
+                    row.createCell(5).setCellValue(width + "x" + height);
                     String fps = MI.Get(MediaInfo.StreamKind.Video, 0, "FrameRate", MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name);
                     row.createCell(6).setCellValue(fps);
                     String aspectRatio = MI.Get(MediaInfo.StreamKind.Video, 0, "DisplayAspectRatio/String", MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name);
                     row.createCell(7).setCellValue(aspectRatio);
-                    
+
                     int audioStreamNumber = MI.Count_Get(MediaInfo.StreamKind.Audio);
                     for (int i = 0; i < audioStreamNumber; i++) {
                         String audioTitle = MI.Get(MediaInfo.StreamKind.Audio, i, "Title", MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name);
@@ -142,9 +142,9 @@ public class MediaInfoExtractor {
 
 //            System.out.println(mediaName);
         }
-        FileOutputStream fileOut = new FileOutputStream(outputFile);
-        wb.write(fileOut);
-        fileOut.close();
+        try (FileOutputStream fileOut = new FileOutputStream(outputFile)) {
+            wb.write(fileOut);
+        }
 
     }
 
