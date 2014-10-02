@@ -22,18 +22,18 @@ public interface DataRetriever {
     String getName();
 
     // Movie
-    // retrieve from id
-    Movie retrieveMovieFromId(String id);
+    // retrieve from IMDB id
+    Movie retrieveMovieFromImdbID(String imdbID, String language);
 
     // retrieve from name
-    List<Movie> retrieveMoviesFromTitle(String title);
+    List<Movie> retrieveMoviesFromTitle(String title, String language);
 
     // TV Serie
-    // retrieve from id
-    Serie retrieveTvSerieFromId(String id);
+    // retrieve from IMDB id
+    Serie retrieveTvSerieFromImdbID(String imdbID, String language);
 
     // retrieve from name
-    List<Serie> retrieveTvSerieFromName(String name);
+    List<Serie> retrieveTvSerieFromName(String name, String language);
     
     // images
     
