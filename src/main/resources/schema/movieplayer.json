@@ -4,6 +4,7 @@
     "name": "Avatar", 
     "original": "Avatar", 
     "year": 2009,
+    "creators": ["Andrew W. Marlowe"],
     "duration": "162", 
     "genres": [
         "Azione", 
@@ -14,6 +15,7 @@
         "thumb": "http://images.movieplayer.it/2011/05/30/locandina-ufficiale-italiana-di-avatar-204858_medium.jpg", 
         "url": "http://images.movieplayer.it/2011/05/30/locandina-ufficiale-italiana-di-avatar-204858.jpg"
     }, 
+    "seasons_number": 0,
     "absolute_url": "http://movieplayer.it/film/avatar_9803/", 
     "moviescore": "4.13852", 
     "review_url": "http://movieplayer.it/film/articoli/il-nuovo-mondo-su-pandora_6494/", 
