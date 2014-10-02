@@ -5,6 +5,7 @@
  */
 package com.github.lucapino.sheetmaker.parsers.xuggler;
 
+import com.github.lucapino.sheetmaker.parsers.InfoRetriever;
 import com.xuggle.xuggler.IContainer;
 import com.xuggle.xuggler.IStream;
 import com.xuggle.xuggler.IStreamCoder;
@@ -18,7 +19,7 @@ import org.apache.commons.lang3.time.DurationFormatUtils;
  *
  * @author Luca Tagliani
  */
-public class XugglerRetriever {
+public class XugglerRetriever implements InfoRetriever {
 
     public static void main(String[] args) {
 
@@ -79,7 +80,7 @@ public class XugglerRetriever {
                             subtitlesTracks.add(stream.getLanguage().toUpperCase());
                             break;
                         case CODEC_TYPE_UNKNOWN:
-                    // try if it's a subtitle, audio or video track
+                            // try if it's a subtitle, audio or video track
                             // SUBTITLE: ITA
                             subtitlesTracks.add(stream.getLanguage().toUpperCase());
                             break;

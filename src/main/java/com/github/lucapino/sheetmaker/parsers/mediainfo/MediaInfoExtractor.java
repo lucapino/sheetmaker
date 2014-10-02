@@ -5,6 +5,7 @@
  */
 package com.github.lucapino.sheetmaker.parsers.mediainfo;
 
+import com.github.lucapino.sheetmaker.parsers.InfoRetriever;
 import com.github.lucapino.sheetmaker.parsers.mediainfo.MediaInfo;
 import java.io.File;
 import java.io.FileFilter;
@@ -29,7 +30,7 @@ import org.apache.poi.ss.usermodel.Workbook;
  *
  * @author tagliani
  */
-public class MediaInfoExtractor {
+public class MediaInfoExtractor implements InfoRetriever {
 
     public static void main(String[] args) throws Exception {
         MediaInfoExtractor extractor = new MediaInfoExtractor();
