@@ -94,10 +94,10 @@ public class DataRetrieverImpl implements DataRetriever {
     }
 
     @Override
-    public Movie retrieveMovieFromId(String id) {
+    public Movie retrieveMovieFromImdbID(String imdbID, String language) {
         MovieImpl movieInfo = null;
         try {
-            MovieDb movieData = api.getMovieInfo(Integer.valueOf(id), null);
+            MovieDb movieData = api.getMovieInfoImdb(imdbID, language);
             if (movieData != null) {
                 movieInfo = new MovieImpl(movieData);
             }
@@ -109,12 +109,13 @@ public class DataRetrieverImpl implements DataRetriever {
     }
 
     @Override
-    public List<Movie> retrieveMoviesFromTitle(String title) {
+    public List<Movie> retrieveMoviesFromTitle(String title, String language) {
         List<Movie> results = new ArrayList<>();
         try {
-            List<MovieDb> movies = api.searchMovie(title, 0, null, false, 0).getResults();
+            List<MovieDb> movies = api.searchMovie(title, 0, language, false, 0).getResults();
             for (MovieDb movie : movies) {
-                results.add(retrieveMovieFromId("" + movie.getId()));
+                // we need to use this api to retrieve the full info
+                results.add(new MovieImpl(api.getMovieInfo(movie.getId(), language)));
             }
         } catch (MovieDbException ex) {
             // TODO: add logger
@@ -124,12 +125,12 @@ public class DataRetrieverImpl implements DataRetriever {
     }
 
     @Override
-    public Serie retrieveTvSerieFromId(String id) {
+    public Serie retrieveTvSerieFromImdbID(String imdbID, String language) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public List<Serie> retrieveTvSerieFromName(String name) {
+    public List<Serie> retrieveTvSerieFromName(String name, String language) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
