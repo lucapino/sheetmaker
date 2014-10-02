@@ -6,6 +6,7 @@
 package com.github.lucapino.sheetmaker.collectors.movieplayer;
 
 import com.github.lucapino.sheetmaker.model.movie.Movie;
+import it.movieplayer.Movieplayer;
 import java.util.List;
 
 /**
@@ -14,59 +15,65 @@ import java.util.List;
  */
 public class MovieImpl implements Movie {
 
+    Movieplayer movieData;
+
+    public MovieImpl(Movieplayer movieData) {
+        this.movieData = movieData;
+    }
+
     @Override
     public String getTitle() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return movieData.getName();
     }
 
     @Override
     public String getReleaseDate() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return "";
     }
 
     @Override
     public String getTagline() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return "";
     }
 
     @Override
     public String getPlot() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return movieData.getPlot();
     }
 
     @Override
     public String getDuration() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return movieData.getDuration();
     }
 
     @Override
     public List<String> getGenres() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return movieData.getGenres();
     }
 
     @Override
     public List<String> getActors() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return movieData.getActors();
     }
 
     @Override
     public List<String> getDirectors() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return movieData.getDirectors();
     }
 
     @Override
     public String getId() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return movieData.getId();
     }
 
     @Override
     public String getImdbId() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return movieData.getImdbid();
     }
 
     @Override
     public String getOriginalTitle() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return movieData.getOriginal();
     }
 
 }
