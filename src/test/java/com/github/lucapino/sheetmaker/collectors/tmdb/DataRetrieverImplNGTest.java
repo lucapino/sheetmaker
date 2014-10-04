@@ -5,6 +5,7 @@
  */
 package com.github.lucapino.sheetmaker.collectors.tmdb;
 
+import com.github.lucapino.sheetmaker.model.Artwork;
 import com.github.lucapino.sheetmaker.model.movie.Movie;
 import com.github.lucapino.sheetmaker.model.tv.Serie;
 import java.util.List;
@@ -128,30 +129,31 @@ public class DataRetrieverImplNGTest {
     /**
      * Test of getPosters method, of class DataRetrieverImpl.
      */
-    @Test(enabled = false)
+    @Test(enabled = true)
     public void testGetPosters() throws Exception {
         System.out.println("getPosters");
-        String id = "";
-        List expResult = null;
-        List result = instance.getPosters(id);
-        assertEquals(result, expResult);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        String imdbID = "tt0268380";
+        List<Artwork> result = instance.getPosters(imdbID);
+        for (Artwork artwork : result) {
+            System.out.println("Type : " + artwork.getType());
+            System.out.println("Thumb: " + artwork.getThumbURL());
+            System.out.println("Image: " + artwork.getImageURL());
+        }
     }
 
     /**
      * Test of getBackdrops method, of class DataRetrieverImpl.
      */
-    @Test(enabled = false)
+    @Test(enabled = true)
     public void testGetBackdrops() throws Exception {
         System.out.println("getBackdrops");
-        String id = "";
-        DataRetrieverImpl instance = new DataRetrieverImpl();
-        List expResult = null;
-        List result = instance.getBackdrops(id);
-        assertEquals(result, expResult);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        String imdbID = "tt0268380";
+        List<Artwork> result = instance.getBackdrops(imdbID);
+        for (Artwork artwork : result) {
+            System.out.println("Type : " + artwork.getType());
+            System.out.println("Thumb: " + artwork.getThumbURL());
+            System.out.println("Image: " + artwork.getImageURL());
+        }
     }
 
 }

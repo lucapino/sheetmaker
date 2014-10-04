@@ -9,7 +9,10 @@ import com.github.lucapino.sheetmaker.collectors.DataRetriever;
 import com.github.lucapino.sheetmaker.model.Artwork;
 import com.github.lucapino.sheetmaker.model.movie.Movie;
 import com.github.lucapino.sheetmaker.model.tv.Serie;
+import it.movieplayer.Images;
 import it.movieplayer.Movieplayer;
+import it.movieplayer.Poster_;
+import it.movieplayer.Wallpaper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -96,13 +99,45 @@ public class DataRetrieverImpl implements DataRetriever {
     }
 
     @Override
-    public List<Artwork> getPosters(String id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public List<Artwork> getPosters(String imdbID) {
+        return getImages(imdbID, "poster");
     }
 
     @Override
-    public List<Artwork> getBackdrops(String id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public List<Artwork> getBackdrops(String imdbID) {
+        return getImages(imdbID, "wallpaper");
+    }
+
+    private List<Artwork> fillArtwork(Movieplayer movieData, String artworkType) {
+        List<Artwork> artworks = new ArrayList<>();
+        Images images = movieData.getImages();
+        switch (artworkType) {
+            case "poster":
+                for (Poster_ poster : images.getPoster()) {
+                    artworks.add(new PosterArtworkImpl(poster));
+                }
+                break;
+            case "backdrop":
+                for (Wallpaper wallpaper : images.getWallpaper()) {
+                    artworks.add(new BackdropArtworkImpl(wallpaper));
+                }
+                break;
+        }
+
+        return artworks;
+    }
+
+    private List<Artwork> getImages(String imdbID, String artworkType) {
+        List<Artwork> result = new ArrayList<>();
+        Movieplayer movieData = target.path("movie/" + imdbID)
+                .queryParam("api_key", MP_API_KEY)
+                .queryParam("type", artworkType)
+                .request(MediaType.APPLICATION_JSON_TYPE)
+                .get(Movieplayer.class);
+        if (movieData != null) {
+            result = fillArtwork(movieData, artworkType);
+        }
+        return result;
     }
 
 }

@@ -37,8 +37,8 @@ public interface DataRetriever {
     
     // images
     
-    List<Artwork> getPosters(String id);
+    List<Artwork> getPosters(String imdbID);
     
-    List<Artwork> getBackdrops(String id);
+    List<Artwork> getBackdrops(String imdbID);
 
 }

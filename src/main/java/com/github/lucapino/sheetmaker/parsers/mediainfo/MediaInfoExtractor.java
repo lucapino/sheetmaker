@@ -34,7 +34,7 @@ public class MediaInfoExtractor implements InfoRetriever {
 
     public static void main(String[] args) throws Exception {
         MediaInfoExtractor extractor = new MediaInfoExtractor();
-        extractor.print(args[0]);
+        extractor.print("/media/Volume");
     }
 
     private void print(String rootPath) throws Exception {

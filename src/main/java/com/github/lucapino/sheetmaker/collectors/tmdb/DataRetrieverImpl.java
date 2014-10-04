@@ -11,6 +11,7 @@ import com.github.lucapino.sheetmaker.model.movie.Movie;
 import com.github.lucapino.sheetmaker.model.tv.Serie;
 import com.omertron.themoviedbapi.MovieDbException;
 import com.omertron.themoviedbapi.TheMovieDbApi;
+import com.omertron.themoviedbapi.model.ArtworkType;
 import com.omertron.themoviedbapi.model.MovieDb;
 import com.omertron.themoviedbapi.model.TmdbConfiguration;
 import java.util.ArrayList;
@@ -25,8 +26,10 @@ public class DataRetrieverImpl implements DataRetriever {
 
     // TODO: manage external key
     public static String TMDB_API_KEY = System.getProperty("tmdb.api.key");
-    public static String POSTER_SIZE = "w92"; // "original";
-    public static String BACKDROP_SIZE = "w300"; // "original";
+    public static String POSTER_THUMB_SIZE = "w92";
+    public static String POSTER_SIZE = "original";
+    public static String BACKDROP_THUMB_SIZE = "w300";
+    public static String BACKDROP_SIZE = "original";
 
     private final TheMovieDbApi api;
     private final TmdbConfiguration configuration;
@@ -135,13 +138,39 @@ public class DataRetrieverImpl implements DataRetriever {
     }
 
     @Override
-    public List<Artwork> getPosters(String id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public List<Artwork> getPosters(String imdbID) {
+        return getArtworks(imdbID, ArtworkType.POSTER);
     }
 
     @Override
-    public List<Artwork> getBackdrops(String id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public List<Artwork> getBackdrops(String imdbID) {
+        return getArtworks(imdbID, ArtworkType.BACKDROP);
+    }
+    
+    private List<Artwork> getArtworks(String imdbID, ArtworkType artworkType) {
+        List<Artwork> artworks = new ArrayList<>();
+        try {
+            MovieDb movieData = api.getMovieInfoImdb(imdbID, null);
+            if (movieData != null) {
+                List<com.omertron.themoviedbapi.model.Artwork> images = api.getMovieImages(movieData.getId(), null).getResults();
+                for (com.omertron.themoviedbapi.model.Artwork image : images) {
+                    if (image.getArtworkType() == artworkType) {
+                        switch(artworkType) {
+                            case POSTER:
+                                artworks.add(new PosterArtworkImpl(configuration.getBaseUrl(), image));
+                                break;
+                            case BACKDROP:
+                                artworks.add(new BackdropArtworkImpl(configuration.getBaseUrl(), image));
+                                break;
+                        }
+                    }
+                }
+            }
+        } catch (MovieDbException ex) {
+            // TODO: add logger
+            ex.printStackTrace();
+        }
+        return artworks;
     }
 
 }

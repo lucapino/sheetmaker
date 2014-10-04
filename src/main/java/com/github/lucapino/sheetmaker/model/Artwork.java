@@ -10,5 +10,7 @@ package com.github.lucapino.sheetmaker.model;
  * @author Luca Tagliani
  */
 public interface Artwork {
-    
+    String getThumbURL();
+    String getImageURL();
+    String getType();
 }

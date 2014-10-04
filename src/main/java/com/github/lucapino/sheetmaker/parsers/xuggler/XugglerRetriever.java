@@ -28,7 +28,6 @@ public class XugglerRetriever implements InfoRetriever {
         File[] files = folder.listFiles();
         for (File file : files) {
             try {
-//            String filename = "/media/Elements/Film/mononoke.mkv";
                 String filename = file.getAbsolutePath();
                 // Create a Xuggler container object
                 IContainer container = IContainer.make();
@@ -47,10 +46,6 @@ public class XugglerRetriever implements InfoRetriever {
                 duration = duration.substring(0, duration.indexOf("."));// , "H':'m':'s", false);
                 System.out.println("Duration: " + duration);
 
-//        Collection<String> keys = metaData.getKeys();
-//        for (String key : keys) {
-//            System.out.println(key + " = " + metaData.getValue(key));
-//        }
                 System.out.println("------------------------");
                 int numStreams = container.getNumStreams();
                 for (int i = 0; i < numStreams; i++) {
