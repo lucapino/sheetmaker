@@ -7,9 +7,13 @@ package com.github.lucapino.sheetmaker.parsers;
 
 /**
  *
- * @author Luca Tagliani
+ * @author tagliani
  */
-public interface InfoRetriever {
+public interface AudioInfo {
 
-    MovieInfo getMovieInfo(String filePath);
+    String getAudioCodec();
+
+    String getChannels();
+
+    String getSamplingRate();
 }

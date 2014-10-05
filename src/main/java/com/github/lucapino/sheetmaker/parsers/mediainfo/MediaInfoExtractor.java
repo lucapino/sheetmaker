@@ -30,11 +30,11 @@ import org.apache.poi.ss.usermodel.Workbook;
  *
  * @author tagliani
  */
-public class MediaInfoExtractor implements InfoRetriever {
+public class MediaInfoExtractor {
 
     public static void main(String[] args) throws Exception {
         MediaInfoExtractor extractor = new MediaInfoExtractor();
-        extractor.print("/media/Volume");
+        extractor.print("/media/TOSHIBA EXT/Film");
     }
 
     private void print(String rootPath) throws Exception {
@@ -55,17 +55,20 @@ public class MediaInfoExtractor implements InfoRetriever {
         Arrays.sort(files);
         Map<File, List<File>> mediaMap = new TreeMap<>();
         for (File file : files) {
+            System.out.println(file.getName());
             // name of the folder -> name of media
             List<File> fileList;
             if (file.isDirectory()) {
                 fileList = recurseSubFolder(filter, file);
                 if (!fileList.isEmpty()) {
+                    System.out.println("adding " + fileList);
                     mediaMap.put(file, fileList);
                 }
             } else {
                 if (filter.accept(file)) {
                     fileList = new ArrayList<>();
                     fileList.add(file);
+                    System.out.println("adding " + fileList);
                     mediaMap.put(file, fileList);
                 }
             }
@@ -73,7 +76,7 @@ public class MediaInfoExtractor implements InfoRetriever {
         Set<File> fileNamesSet = mediaMap.keySet();
         File outputFile = new File("/home/tagliani/tmp/HD-report.xls");
         Workbook wb = new HSSFWorkbook(new FileInputStream(outputFile));
-        Sheet sheet = wb.createSheet("HD8");
+        Sheet sheet = wb.createSheet("Toshiba");
 
         MediaInfo MI = new MediaInfo();
         int j = 0;
@@ -84,9 +87,11 @@ public class MediaInfoExtractor implements InfoRetriever {
                 List<String> videoTracks = new ArrayList<>();
                 List<String> subtitlesTracks = new ArrayList<>();
                 MI.Open(fileInList.getAbsolutePath());
-//                System.out.println(fileInList.getName());
+                
                 String durationInt = MI.Get(MediaInfo.StreamKind.General, 0, "Duration", MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name);
+                System.out.println(fileInList.getName() + " -> " + durationInt);
                 if (StringUtils.isNotEmpty(durationInt) && Integer.valueOf(durationInt) >= 60 * 60 * 1000) {
+                    
                     Row row = sheet.createRow(j);
                     String duration = MI.Get(MediaInfo.StreamKind.General, 0, "Duration/String", MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name);
                     // Create a cell and put a value in it.

@@ -19,7 +19,7 @@ import org.apache.commons.lang3.time.DurationFormatUtils;
  *
  * @author Luca Tagliani
  */
-public class XugglerRetriever implements InfoRetriever {
+public class XugglerRetriever  {
 
     public static void main(String[] args) {
 
