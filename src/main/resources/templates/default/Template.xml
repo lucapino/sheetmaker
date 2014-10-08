@@ -1,0 +1,204 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Template>
+  <Settings>
+    <Directors Separator=", " MaximumValues="1" />
+    <Actors Separator=", " MaximumValues="10" />
+    <Genres Separator=", " MaximumValues="5" />
+    <Countries Separator=", " MaximumValues="2" />
+    <Studios Separator=", " MaximumValues="1" />
+    <Rating FileName="%PATH%\star_yellow_24x24.png" />
+  </Settings>
+  <SoundFormats>
+    <SoundFormat Name="AAC" Text="AAC Unknown" Image="%PATH%\sound_format\aac.png" />
+    <SoundFormat Name="AAC10" Text="AAC 1.0" Image="%PATH%\sound_format\aac10.png" />
+    <SoundFormat Name="AAC20" Text="AAC 2.0" Image="%PATH%\sound_format\aac20.png" />
+    <SoundFormat Name="AAC21" Text="AAC 2.1" Image="%PATH%\sound_format\aac21.png" />
+    <SoundFormat Name="AAC40" Text="AAC 4.0" Image="%PATH%\sound_format\aac40.png" />
+    <SoundFormat Name="AAC41" Text="AAC 4.1" Image="%PATH%\sound_format\aac41.png" />
+    <SoundFormat Name="AAC51" Text="AAC 5.1" Image="%PATH%\sound_format\aac51.png" />
+    <SoundFormat Name="AAC70" Text="AAC 7.0" Image="%PATH%\sound_format\aac70.png" />
+    <SoundFormat Name="AAC71" Text="AAC 7.1" Image="%PATH%\sound_format\aac71.png" />
+    <SoundFormat Name="DD" Text="DD Unknown" Image="%PATH%\sound_format\dd.png" />
+    <SoundFormat Name="DD20" Text="Dolby Digital 2.0" Image="%PATH%\sound_format\dd20.png" />
+    <SoundFormat Name="DD21" Text="Dolby Digital 2.1" Image="%PATH%\sound_format\dd21.png" />
+    <SoundFormat Name="DD40" Text="Dolby Digital 4.0" Image="%PATH%\sound_format\dd40.png" />
+    <SoundFormat Name="DD41" Text="Dolby Digital 4.1" Image="%PATH%\sound_format\dd41.png" />
+    <SoundFormat Name="DD51" Text="Dolby Digital 5.1" Image="%PATH%\sound_format\dd51.png" />
+    <SoundFormat Name="DD70" Text="Dolby Digital 7.0" Image="%PATH%\sound_format\dd70.png" />
+    <SoundFormat Name="DD71" Text="Dolby Digital 7.1" Image="%PATH%\sound_format\dd71.png" />
+    <SoundFormat Name="DDPLUS" Text="Dolby Digital Plus" Image="%PATH%\sound_format\ddplus.png" />
+    <SoundFormat Name="DTRUEHD" Text="Dolby True HD" Image="%PATH%\sound_format\dtruehd.png" />
+    <SoundFormat Name="DTS" Text="DTS Unknown" Image="%PATH%\sound_format\dts.png" />
+    <SoundFormat Name="DTS20" Text="DTS 2.0" Image="%PATH%\sound_format\dts20.png" />
+    <SoundFormat Name="DTS21" Text="DTS 2.1" Image="%PATH%\sound_format\dts21.png" />
+    <SoundFormat Name="DTS40" Text="DTS 4.0" Image="%PATH%\sound_format\dts40.png" />
+    <SoundFormat Name="DTS41" Text="DTS 4.1" Image="%PATH%\sound_format\dts41.png" />
+    <SoundFormat Name="DTS51" Text="DTS 5.1" Image="%PATH%\sound_format\dts51.png" />
+    <SoundFormat Name="DTS70" Text="DTS 7.0" Image="%PATH%\sound_format\dts70.png" />
+    <SoundFormat Name="DTS71" Text="DTS 7.1" Image="%PATH%\sound_format\dts71.png" />
+    <SoundFormat Name="DTSES" Text="DTS ES" Image="%PATH%\sound_format\dtses.png" />
+    <SoundFormat Name="DTSHD" Text="DTS HD" Image="%PATH%\sound_format\dtshd.png" />
+    <SoundFormat Name="FLAC" Text="Flac" Image="%PATH%\sound_format\flac.png" />
+    <SoundFormat Name="FLAC20" Text="Flac 2.0" Image="%PATH%\sound_format\flac20.png" />
+    <SoundFormat Name="FLAC21" Text="Flac 2.1" Image="%PATH%\sound_format\flac21.png" />
+    <SoundFormat Name="FLAC40" Text="Flac 4.0" Image="%PATH%\sound_format\flac40.png" />
+    <SoundFormat Name="FLAC41" Text="Flac 4.1" Image="%PATH%\sound_format\flac41.png" />
+    <SoundFormat Name="FLAC51" Text="Flac 5.1" Image="%PATH%\sound_format\flac51.png" />
+    <SoundFormat Name="FLAC70" Text="Flac 7.0" Image="%PATH%\sound_format\flac70.png" />
+    <SoundFormat Name="FLAC71" Text="Flac 7.1" Image="%PATH%\sound_format\flac71.png" />
+    <SoundFormat Name="MLP" Text="MLP" Image="%PATH%\sound_format\mlp.png" />
+    <SoundFormat Name="MP3" Text="All Mpeg" Image="%PATH%\sound_format\mp3.png" />
+    <SoundFormat Name="MP310" Text="MP3 1.0" Image="%PATH%\sound_format\mp310.png" />
+    <SoundFormat Name="MP320" Text="MP3 2.0" Image="%PATH%\sound_format\mp320.png" />
+    <SoundFormat Name="OGG" Text="Ogg" Image="%PATH%\sound_format\ogg.png" />
+    <SoundFormat Name="OGG20" Text="Ogg 2.0" Image="%PATH%\sound_format\ogg20.png" />
+    <SoundFormat Name="OGG21" Text="Ogg 2.1" Image="%PATH%\sound_format\ogg21.png" />
+    <SoundFormat Name="OGG40" Text="Ogg 4.0" Image="%PATH%\sound_format\ogg40.png" />
+    <SoundFormat Name="OGG41" Text="Ogg 4.1" Image="%PATH%\sound_format\ogg41.png" />
+    <SoundFormat Name="OGG51" Text="Ogg 5.1" Image="%PATH%\sound_format\ogg51.png" />
+    <SoundFormat Name="OGG70" Text="Ogg 7.0" Image="%PATH%\sound_format\ogg70.png" />
+    <SoundFormat Name="OGG71" Text="Ogg 7.1" Image="%PATH%\sound_format\ogg71.png" />
+  </SoundFormats>
+  <Resolutions>
+    <Resolution Name="288P" Text="288p" Image="%PATH%\image_resolution\288p.png" />
+    <Resolution Name="480I" Text="480I" Image="%PATH%\image_resolution\480i.png" />
+    <Resolution Name="480P" Text="480p" Image="%PATH%\image_resolution\480.png" />
+    <Resolution Name="576I" Text="576I" Image="%PATH%\image_resolution\576i.png" />
+    <Resolution Name="576P" Text="576p" Image="%PATH%\image_resolution\576.png" />
+    <Resolution Name="720I" Text="720I" Image="%PATH%\image_resolution\720i.png" />
+    <Resolution Name="720P" Text="720p" Image="%PATH%\image_resolution\720.png" />
+    <Resolution Name="1080I" Text="1080I" Image="%PATH%\image_resolution\1080i.png" />
+    <Resolution Name="1080P" Text="1080p" Image="%PATH%\image_resolution\1080.png" />
+  </Resolutions>
+  <MediaFormats>
+    <MediaFormat Name="AVCHD" Text="AVCHD" Image="%PATH%\media_format\avchd.png" />
+    <MediaFormat Name="BLURAY" Text="Blu-Ray" Image="%PATH%\media_format\bluray.png" />
+    <MediaFormat Name="DVD" Text="DVD" Image="%PATH%\media_format\dvd.png" />
+    <MediaFormat Name="flv" Text="FLV" Image="%PATH%\video_format\flv.png" />
+    <MediaFormat Name="HDDVD" Text="HD DVD" Image="%PATH%\media_format\hddvd.png" />
+    <MediaFormat Name="mov" Text="MOV" Image="%PATH%\video_format\mov.png" />
+    <MediaFormat Name="mpeg" Text="MPEG" Image="%PATH%\media_format\mpeg.png" />
+    <MediaFormat Name="mpeg2" Text="MPEG-2" Image="%PATH%\media_format\mpeg.png" />
+    <MediaFormat Name="mpeg4" Text="MPEG-4" Image="%PATH%\media_format\mpeg.png" />
+    <MediaFormat Name="MKV" Text="MKV" Image="%PATH%\media_format\mkv.png" />
+    <MediaFormat Name="rm" Text="RM" Image="%PATH%\video_format\rm.png" />
+    <MediaFormat Name="rmvb" Text="RMVB" Image="%PATH%\video_format\rmvb.png" />
+  </MediaFormats>
+  <VideoFormats>
+    <VideoFormat Name="avc" Text="AVC" Image="%PATH%\video_format\h264.png" />
+    <VideoFormat Name="divx" Text="Divx" Image="%PATH%\video_format\divx.png" />
+    <VideoFormat Name="wmv" Text="WMV" Image="%PATH%\video_format\wmv.png" />
+    <VideoFormat Name="xvid" Text="XviD" Image="%PATH%\video_format\xvid.png" />
+  </VideoFormats>
+  <ImageDrawTemplate SDKVersion="2.0">
+    <OutputImageSettings ColorDepth="Format32bppAlpha" ImageFormat="Jpeg" JpegCompressionLevel="80" Dpi="96" />
+    <Canvas AutoSize="False" CenterElements="False" Height="720" Width="1280" Fill="Solid,16777215,-16777216,BackwardDiagonal,-1,-16777216,0,,Tile,None,50,100,,,,0,0,0,0,Line,True" />
+    <Elements>
+      <ImageElement Name="Background" X="0" Y="0" Width="1280" Height="720" Source="File" Offset="0" MultiPageIndex="-1" SourceData="%BACKGROUND%" NullImageUrl="%PATH%\BACKDROP.JPG" SourceDpi="72" UseSourceDpi="False" />
+      <ImageElement Name="Panel" X="30" Y="140" Width="1220" Height="480" Source="File" Offset="0" MultiPageIndex="-1" SourceData="%PATH%\Panel.png" NullImageUrl="" UseSourceDpi="False">
+        <Actions>
+          <AdjustOpacity Opacity="75" />
+        </Actions>
+      </ImageElement>
+      <ImageElement Name="Cover" X="510" Y="154" Width="300" Height="450" Source="File" Offset="0" MultiPageIndex="-1" SourceData="%COVER%" NullImageUrl="" UseSourceDpi="False">
+        <Actions>
+          <RoundCorners BorderColor="-5658199" BorderWidth="1" Roundness="5" Corners="All" />
+        </Actions>
+      </ImageElement>
+      <TextElement Name="Title" X="50" Y="90" Width="1050" Height="40" AutoSize="False" Multiline="False" Font="Impact,24,True,False,False,False,Point,,0" ForeColor="-2894893" StrokeColor="-16777216" StrokeWidth="0" Text="%TITLE%" TextAlignment="TopLeft" TextQuality="AntiAlias">
+        <Actions>
+          <DropShadow Angle="315" Color="-16777216" Distance="5" Opacity="100" Softness="5" />
+        </Actions>
+      </TextElement>
+      <TextElement Name="Year" X="1122" Y="90" Width="100" Height="40" AutoSize="False" Multiline="False" Font="Impact,24,True,False,False,False,Point,,0" ForeColor="-2894893" StrokeColor="-16777216" StrokeWidth="0" Text="%YEAR%" TextAlignment="TopRight" TextQuality="AntiAlias">
+        <Actions>
+          <DropShadow Angle="315" Color="-16777216" Distance="5" Opacity="100" Softness="5" />
+        </Actions>
+      </TextElement>
+      <TextElement Name="OriginalTitle" X="50" Y="155" Width="435" Height="30" AutoSize="False" Multiline="False" Font="Tahoma,16,True,False,False,False,Point,,0" ForeColor="-2894893" StrokeColor="-16777216" StrokeWidth="0" Text="%ORIGINALTITLE%" TextAlignment="TopLeft" TextQuality="AntiAlias" />
+      <TextElement Name="ActorsTEXT" X="50" Y="195" Width="110" Height="25" AutoSize="False" Multiline="False" Font="Tahoma,14,True,False,False,False,Point,,0" ForeColor="-7876885" StrokeColor="-16777216" StrokeWidth="0" Text="Actors" TextAlignment="MiddleLeft" TextQuality="AntiAlias" />
+      <TextElement Name="Actors" X="50" Y="217" Width="435" Height="85" AutoSize="False" Multiline="True" Font="Tahoma,12,True,False,False,False,Point,,0" ForeColor="-2894893" StrokeColor="-16777216" StrokeWidth="0" Text="%ACTORS%" TextAlignment="TopLeft" TextQuality="AntiAlias">
+        <Actions>
+          <RoundCorners BorderColor="-9868951" BorderWidth="1" Roundness="1" Corners="All" />
+        </Actions>
+      </TextElement>
+      <TextElement Name="PlotTEXT" X="50" Y="310" Width="110" Height="25" AutoSize="False" Multiline="False" Font="Tahoma,14,True,False,False,False,Point,,0" ForeColor="-7876885" StrokeColor="-16777216" StrokeWidth="0" Text="Plot" TextAlignment="MiddleLeft" TextQuality="AntiAlias" />
+      <TextElement Name="Plot" X="50" Y="333" Width="435" Height="270" AutoSize="False" Multiline="True" Font="Tahoma,12,True,False,False,False,Point,,0" ForeColor="-2894893" StrokeColor="-16777216" StrokeWidth="0" Text="%PLOT%" TextAlignment="TopLeft" TextQuality="AntiAlias">
+        <Actions>
+          <RoundCorners BorderColor="-9868951" BorderWidth="1" Roundness="1" Corners="All" />
+        </Actions>
+      </TextElement>
+      <TextElement Name="GenreTEXT" X="835" Y="155" Width="110" Height="25" AutoSize="False" Multiline="False" Font="Tahoma,14,True,False,False,False,Point,,0" ForeColor="-7876885" StrokeColor="-16777216" StrokeWidth="0" Text="Genre" TextAlignment="TopLeft" TextQuality="AntiAlias" />
+      <TextElement Name="Genre" X="835" Y="177" Width="400" Height="45" AutoSize="False" Multiline="False" Font="Tahoma,12,True,False,False,False,Point,,0" ForeColor="-2894893" StrokeColor="-16777216" StrokeWidth="0" Text="%GENRES%" TextAlignment="TopLeft" TextQuality="AntiAlias">
+        <Actions>
+          <RoundCorners BorderColor="-9868951" BorderWidth="1" Roundness="1" Corners="All" />
+        </Actions>
+      </TextElement>
+      <TextElement Name="DirectorTEXT" X="835" Y="225" Width="110" Height="25" AutoSize="False" Multiline="False" Font="Tahoma,14,True,False,False,False,Point,,0" ForeColor="-7876885" StrokeColor="-16777216" StrokeWidth="0" Text="Director" TextAlignment="MiddleLeft" TextQuality="AntiAlias" />
+      <TextElement Name="Director" X="835" Y="247" Width="400" Height="25" AutoSize="False" Multiline="False" Font="Tahoma,12,True,False,False,False,Point,,0" ForeColor="-2894893" StrokeColor="-16777216" StrokeWidth="0" Text="%DIRECTORS%" TextAlignment="MiddleLeft" TextQuality="AntiAlias">
+        <Actions>
+          <RoundCorners BorderColor="-9868951" BorderWidth="1" Roundness="1" Corners="All" />
+        </Actions>
+      </TextElement>
+      <TextElement Name="CountriesTEXT" X="835" Y="275" Width="110" Height="25" AutoSize="False" Multiline="False" Font="Tahoma,14,True,False,False,False,Point,,0" ForeColor="-7876885" StrokeColor="-16777216" StrokeWidth="0" Text="Countries" TextAlignment="TopLeft" TextQuality="AntiAlias" />
+      <TextElement Name="Countries" X="835" Y="297" Width="400" Height="25" AutoSize="False" Multiline="False" Font="Tahoma,12,True,False,False,False,Point,,0" ForeColor="-2894893" StrokeColor="-16777216" StrokeWidth="0" Text="%COUNTRIES%" TextAlignment="MiddleLeft" TextQuality="AntiAlias">
+        <Actions>
+          <RoundCorners BorderColor="-9868951" BorderWidth="1" Roundness="1" Corners="All" />
+        </Actions>
+      </TextElement>
+      <TextElement Name="CompanyTEXT" X="835" Y="325" Width="110" Height="25" AutoSize="False" Multiline="False" Font="Tahoma,14,True,False,False,False,Point,,0" ForeColor="-7876885" StrokeColor="-16777216" StrokeWidth="0" Text="Company" TextAlignment="TopLeft" TextQuality="AntiAlias" />
+      <TextElement Name="Company" X="835" Y="347" Width="400" Height="25" AutoSize="False" Multiline="False" Font="Tahoma,12,True,False,False,False,Point,,0" ForeColor="-2894893" StrokeColor="-16777216" StrokeWidth="0" Text="%STUDIOS%" TextAlignment="MiddleLeft" TextQuality="AntiAlias">
+        <Actions>
+          <RoundCorners BorderColor="-9868951" BorderWidth="1" Roundness="1" Corners="All" />
+        </Actions>
+      </TextElement>
+      <TextElement Name="Certification" X="835" Y="382" Width="400" Height="25" AutoSize="False" Multiline="False" Font="Tahoma,12,True,False,False,False,Point,,0" ForeColor="-2894893" StrokeColor="-16777216" StrokeWidth="0" Text="                           %CERTIFICATION%" TextAlignment="MiddleLeft" TextQuality="AntiAlias" />
+      <TextElement Name="CertificationTEXT" X="835" Y="380" Width="400" Height="25" AutoSize="False" Multiline="False" Font="Tahoma,14,True,False,False,False,Point,,0" ForeColor="-7876885" StrokeColor="-16777216" StrokeWidth="0" Text="Certification:" TextAlignment="MiddleLeft" TextQuality="AntiAlias">
+        <Actions>
+          <RoundCorners BorderColor="-9868951" BorderWidth="1" Roundness="1" Corners="All" />
+        </Actions>
+      </TextElement>
+      <TextElement Name="Runtime" X="835" Y="412" Width="400" Height="25" AutoSize="False" Multiline="False" Font="Tahoma,12,True,False,False,False,Point,,0" ForeColor="-2894893" StrokeColor="-16777216" StrokeWidth="0" Text="                   %RUNTIME% min." TextAlignment="MiddleLeft" TextQuality="AntiAlias" />
+      <TextElement Name="RuntimeTEXT" X="835" Y="410" Width="400" Height="25" AutoSize="False" Multiline="False" Font="Tahoma,14,True,False,False,False,Point,,0" ForeColor="-7876885" StrokeColor="-16777216" StrokeWidth="0" Text="Runtime:" TextAlignment="MiddleLeft" TextQuality="AntiAlias">
+        <Actions>
+          <RoundCorners BorderColor="-9868951" BorderWidth="1" Roundness="1" Corners="All" />
+        </Actions>
+      </TextElement>
+      <TextElement Name="AspectRatio" X="835" Y="442" Width="400" Height="25" AutoSize="False" Multiline="False" Font="Tahoma,12,True,False,False,False,Point,,0" ForeColor="-2894893" StrokeColor="-16777216" StrokeWidth="0" Text="                           %ASPECTRATIOTEXT%" TextAlignment="MiddleLeft" TextQuality="AntiAlias" />
+      <TextElement Name="AspectRatioTEXT" X="835" Y="440" Width="400" Height="25" AutoSize="False" Multiline="False" Font="Tahoma,14,True,False,False,False,Point,,0" ForeColor="-7876885" StrokeColor="-16777216" StrokeWidth="0" Text="Aspect Ratio:" TextAlignment="MiddleLeft" TextQuality="AntiAlias">
+        <Actions>
+          <RoundCorners BorderColor="-9868951" BorderWidth="1" Roundness="1" Corners="All" />
+        </Actions>
+      </TextElement>
+      <TextElement Name="Framerate" X="835" Y="472" Width="400" Height="25" AutoSize="False" Multiline="False" Font="Tahoma,12,True,False,False,False,Point,,0" ForeColor="-2894893" StrokeColor="-16777216" StrokeWidth="0" Text="             %VIDEORESOLUTIONTEXT% - %FRAMERATETEXT%Hz" TextAlignment="MiddleLeft" TextQuality="AntiAlias" />
+      <TextElement Name="VideoInfo" X="835" Y="470" Width="400" Height="25" AutoSize="False" Multiline="False" Font="Tahoma,14,True,False,False,False,Point,,0" ForeColor="-7876885" StrokeColor="-16777216" StrokeWidth="0" Text="Video:" TextAlignment="MiddleLeft" TextQuality="AntiAlias">
+        <Actions>
+          <RoundCorners BorderColor="-9868951" BorderWidth="1" Roundness="1" Corners="All" />
+        </Actions>
+      </TextElement>
+      <ImageElement Name="Imdb" X="835" Y="505" Width="48" Height="24" Source="File" Offset="0" MultiPageIndex="-1" SourceData="%PATH%\imdb.png" NullImageUrl="" UseSourceDpi="False" />
+      <TextElement Name="Rating" X="890" Y="505" Width="100" Height="24" AutoSize="False" Multiline="False" Font="Tahoma,14,True,False,False,False,Point,,0" ForeColor="-2894893" StrokeColor="-16777216" StrokeWidth="0" Text="%RATING%" TextAlignment="TopCenter" TextQuality="AntiAlias" />
+      <ImageElement Name="StarMask" X="995" Y="505" Width="240" Height="24" Source="File" Offset="0" MultiPageIndex="-1" SourceData="%PATH%\starmask.png" NullImageUrl="" UseSourceDpi="False">
+        <Actions>
+          <AdjustOpacity Opacity="30" />
+        </Actions>
+      </ImageElement>
+      <ImageElement Name="RatingStars" X="995" Y="505" Width="240" Height="24" Source="Base64String" Offset="0" MultiPageIndex="-1" SourceData="%RATINGSTARS%" NullImageUrl="" />
+      <ImageElement Name="MediaFormat" X="835" Y="535" Width="100" Height="70" Source="Base64String" Offset="0" MultiPageIndex="-1" SourceData="%MEDIAFORMAT%" NullImageUrl="" />
+      <ImageElement Name="Resolution" X="935" Y="535" Width="100" Height="70" Source="Base64String" Offset="0" MultiPageIndex="-1" SourceData="%RESOLUTION%" NullImageUrl="" />
+      <ImageElement Name="VideoFormat" X="1035" Y="535" Width="100" Height="70" Source="Base64String" Offset="0" MultiPageIndex="-1" SourceData="%VIDEOFORMAT%" NullImageUrl="" />
+      <ImageElement Name="SoundFormat" X="1135" Y="535" Width="100" Height="70" Source="Base64String" Offset="0" MultiPageIndex="-1" SourceData="%SOUNDFORMAT%" NullImageUrl="" />
+      <ImageElement Name="Panel2" X="835" Y="535" Width="395" Height="67" Source="File" Offset="0" MultiPageIndex="-1" SourceData="%PATH%\Panel2.png" NullImageUrl="" UseSourceDpi="False">
+        <Actions>
+          <RoundCorners BorderColor="-2894893" BorderWidth="2" Roundness="7" Corners="All" />
+          <AdjustOpacity Opacity="25" />
+        </Actions>
+      </ImageElement>
+      <ImageElement Name="Logo" X="5" Y="670" Width="98" Height="45" Source="File" Offset="0" MultiPageIndex="-1" SourceData="%PATH%\logo\wdtvhd.png" NullImageUrl="" UseSourceDpi="False">
+        <Actions>
+          <AdjustOpacity Opacity="85" />
+        </Actions>
+      </ImageElement>
+    </Elements>
+  </ImageDrawTemplate>
+</Template>
