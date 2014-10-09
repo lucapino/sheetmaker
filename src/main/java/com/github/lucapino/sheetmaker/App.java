@@ -5,19 +5,36 @@
  */
 package com.github.lucapino.sheetmaker;
 
-import com.github.lucapino.sheetmaker.collectors.DataRetriever;
-import java.util.ServiceLoader;
+import com.github.lucapino.sheetmaker.renderer.TemplateSAXParser;
+import java.io.InputStream;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+import org.xml.sax.helpers.DefaultHandler;
 
 /**
  *
  * @author Luca Tagliani
  */
 public class App {
+
     public static void main(String[] args) {
-        ServiceLoader<DataRetriever> dataRetrievers = ServiceLoader.load(DataRetriever.class);
-        for (DataRetriever dataRetriever : dataRetrievers) {
-            System.out.println(dataRetriever.getClass().getName());
+        App app = new App();
+        app.parse();
+    }
+
+    public void parse() {
+        SAXParserFactory factory = SAXParserFactory.newInstance();
+        try {
+
+            InputStream xmlInput = this.getClass().getResourceAsStream("/templates/default/Template.xml");
+            SAXParser saxParser = factory.newSAXParser();
+
+            DefaultHandler handler = new TemplateSAXParser();
+            saxParser.parse(xmlInput, handler);
+
+        } catch (Throwable err) {
+            err.printStackTrace();
         }
-        
+
     }
 }
