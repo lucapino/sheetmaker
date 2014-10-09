@@ -5,6 +5,7 @@
  */
 package com.github.lucapino.sheetmaker;
 
+import com.github.lucapino.sheetmaker.renderer.MovieTemplateRenderer;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Composite;
@@ -163,9 +164,8 @@ public class PreviewJFrame extends JFrame {
              $rating_image=$clipboard->Append(stack=>'false');
              @$clipboard=();
              }
-             */ 
+             */
             // g.drawImage(overlay, 200, 200, null);
-
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -179,6 +179,12 @@ public class PreviewJFrame extends JFrame {
             @Override
             public void run() {
                 PreviewJFrame frame = new PreviewJFrame();
+//                MovieTemplateRenderer renderer = new MovieTemplateRenderer();
+//                try {
+//                    frame.add(renderer.renderTemplate(this.getClass().getResourceAsStream("/templates/default/Template.xml")));
+//                } catch (Exception ex) {
+//                    ex.printStackTrace();
+//                }
                 frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
                 frame.setVisible(true);
             }

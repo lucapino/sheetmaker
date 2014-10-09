@@ -5,7 +5,6 @@
  */
 package com.github.lucapino.sheetmaker.model.movie;
 
-import com.github.lucapino.sheetmaker.model.Artwork;
 import java.util.List;
 
 /**
