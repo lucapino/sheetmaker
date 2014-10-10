@@ -5,6 +5,7 @@
  */
 package com.github.lucapino.sheetmaker.renderer;
 
+import java.util.HashMap;
 import java.util.Map;
 import org.jdom2.Element;
 
@@ -17,8 +18,8 @@ public class TemplateSettings {
     private static final String RATING = "Rating";
     private static final String RATING_FILENAME = "FileName";
 
-    private Map<String, SettingsElement> settingsElements;
-    private String starsRatingFilename;
+    private final Map<String, SettingsElement> settingsElements = new HashMap<>();
+    private final String starsRatingFilename;
 
     public TemplateSettings(Element settingsElement) {
         for (Element setting : settingsElement.getChildren()) {

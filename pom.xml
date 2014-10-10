@@ -38,6 +38,32 @@
                     </systemPropertyVariables>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>properties-maven-plugin</artifactId>
+                <version>1.0-alpha-2</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>set-system-properties</goal>
+                        </goals>
+                        <configuration>
+                            <properties>
+                                <mp.api.key>${mpKey}</mp.api.key>
+                                <tmdb.api.key>${tmdbKey}</tmdb.api.key>
+                                <!--                                <property>
+                                    <name>mp.api.key</name>
+                                    <value>${mpKey}</value>
+                                </property>
+                                <property>
+                                    <name>tmdb.api.key</name>
+                                    <value>${tmdbKey}</value>
+                                </property>-->
+                            </properties>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
     <dependencies>
@@ -126,6 +152,21 @@
             <groupId>com.jhlabs</groupId>
             <artifactId>filters</artifactId>
             <version>2.0.235-1</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.7</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>1.1.2</version>
         </dependency>
     </dependencies>
     <repositories>

@@ -6,11 +6,26 @@
 package com.github.lucapino.sheetmaker.renderer;
 
 import com.github.lucapino.sheetmaker.model.movie.Movie;
+import static com.github.lucapino.sheetmaker.renderer.Constants.BACKGROUND;
+import static com.github.lucapino.sheetmaker.renderer.Constants.CANVAS;
+import static com.github.lucapino.sheetmaker.renderer.Constants.COVER;
+import static com.github.lucapino.sheetmaker.renderer.Constants.FANART1;
+import static com.github.lucapino.sheetmaker.renderer.Constants.FANART2;
+import static com.github.lucapino.sheetmaker.renderer.Constants.FANART3;
+import static com.github.lucapino.sheetmaker.renderer.Constants.IMAGE_DRAW_TEMPLATE;
+import static com.github.lucapino.sheetmaker.renderer.Constants.MEDIA_FORMATS;
+import static com.github.lucapino.sheetmaker.renderer.Constants.OUTPUT_IMAGE_SETTINGS;
+import static com.github.lucapino.sheetmaker.renderer.Constants.PATH;
+import static com.github.lucapino.sheetmaker.renderer.Constants.RESOLUTIONS;
+import static com.github.lucapino.sheetmaker.renderer.Constants.SETTINGS;
+import static com.github.lucapino.sheetmaker.renderer.Constants.SOUND_FORMATS;
+import static com.github.lucapino.sheetmaker.renderer.Constants.VIDEO_FORMATS;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.StringReader;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +36,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.input.SAXBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -28,22 +45,7 @@ import org.jdom2.input.SAXBuilder;
  */
 public class MovieTemplateRenderer {
 
-    private final String SETTINGS = "Settings";
-    private final String SOUND_FORMATS = "SoundFormats";
-    private final String RESOLUTIONS = "Resolutions";
-    private final String MEDIA_FORMATS = "MediaFormats";
-    private final String VIDEO_FORMATS = "VideoFormats";
-    private final String IMAGE_DRAW_TEMPLATE = "ImageDrawTemplate";
-
-    private final String OUTPUT_IMAGE_SETTINGS = "OutputImageSettings";
-    private final String CANVAS = "Canvas";
-
-    private final static String BACKGROUND = "%BACKGROUND%";
-    private final static String FANART1 = "%FANART1%";
-    private final static String FANART2 = "%FANART2%";
-    private final static String FANART3 = "%FANART3%";
-    private final static String COVER = "%COVER%";
-    private final static String PATH = "%PATH%";
+    private final static Logger logger = LoggerFactory.getLogger(MovieTemplateRenderer.class);
 
     private String basePath;
 
@@ -69,14 +71,21 @@ public class MovieTemplateRenderer {
         this.coverFilePath = coverFilePath;
     }
 
-    public JPanel renderTemplate(File templateXML) throws Exception {
-        JPanel panel = new JPanel();
+    public JPanel renderTemplate(URL templateXML) throws Exception {
 
-        basePath = templateXML.getParentFile().getAbsolutePath();
+        String templatePath = templateXML.getFile();
+        File templateFile = new File(templatePath);
 
-        String templateString = IOUtils.toString(new FileInputStream(templateXML));
+        // set basePath
+        basePath = templateFile.getParentFile().getAbsolutePath();
+
+        logger.info("Loading template...");
+        // load template
+        String templateString = IOUtils.toString(new FileInputStream(templateFile));
+        // filter placeHolder
+        logger.info("Parsing template for substitution...");
         StringReader templateReader = filterTemplate(templateString, movie);
-
+        logger.info("Template parsed...");
         // parse XML
         // the SAXBuilder is the easiest way to create the JDOM2 objects.
         SAXBuilder jdomBuilder = new SAXBuilder();
@@ -85,24 +94,29 @@ public class MovieTemplateRenderer {
         Document jdomDocument = jdomBuilder.build(templateReader);
         Element rootElement = jdomDocument.getRootElement();
         // process Settings
+        logger.info("Caching settings...");
         Element settingsElement = rootElement.getChild(SETTINGS);
         settings = new TemplateSettings(settingsElement);
         // process SoundFormats
+        logger.info("Caching soundFormats...");
         Element soundFormatsElement = rootElement.getChild(SOUND_FORMATS);
         cacheElements(soundFormatsElement, soundFormats);
         // process Resolutions
+        logger.info("Caching resolutions...");
         Element resolutionsElement = rootElement.getChild(RESOLUTIONS);
         cacheElements(resolutionsElement, resolutions);
         // process MediaFormats
+        logger.info("Caching mediaFormats...");
         Element mediaFormatsElement = rootElement.getChild(MEDIA_FORMATS);
         cacheElements(mediaFormatsElement, mediaFormats);
         // process VideoFormats
+        logger.info("Caching videoFormats...");
         Element videoFormatsElement = rootElement.getChild(VIDEO_FORMATS);
         cacheElements(videoFormatsElement, videoFormats);
         // process ImageDrawTemplate
         Element drawImageTemplateElement = rootElement.getChild(IMAGE_DRAW_TEMPLATE);
-        drawTemplate(panel, drawImageTemplateElement);
-        return panel;
+        logger.info("Drawing images...");
+        return drawTemplate(drawImageTemplateElement);
     }
 
     private void cacheElements(Element element, Map<String, TemplateElement> cache) {
@@ -112,27 +126,29 @@ public class MovieTemplateRenderer {
         }
     }
 
-    private void drawTemplate(JPanel panel, Element drawImageTemplateElement) throws Exception {
+    private ImagePanel drawTemplate(Element drawImageTemplateElement) throws Exception {
         // OutputImageSettings
+        logger.info("reading ImageDrawTemlate attributes...");
         Element outputImageSettingsElement = drawImageTemplateElement.getChild(OUTPUT_IMAGE_SETTINGS);
         String colorDepth = outputImageSettingsElement.getAttributeValue("ColorDepth");
         String imageForat = outputImageSettingsElement.getAttributeValue("ImageFormat");
         String jpegCompressionLevel = outputImageSettingsElement.getAttributeValue("JpegCompressionLevel");
         String dpi = outputImageSettingsElement.getAttributeValue("Dpi");
-
+        logger.info("Reading Canvas attributes...");
         // Canvas
         Element canvasElement = drawImageTemplateElement.getChild(CANVAS);
-        String autoSize = drawImageTemplateElement.getAttributeValue("AutoSize");
-        String centerElements = drawImageTemplateElement.getAttributeValue("CenterElements");
-        int height = Integer.valueOf(drawImageTemplateElement.getAttributeValue("Height"));
-        int width = Integer.valueOf(drawImageTemplateElement.getAttributeValue("Width"));
-        String fill = drawImageTemplateElement.getAttributeValue("Fill");
+        String autoSize = canvasElement.getAttributeValue("AutoSize");
+        String centerElements = canvasElement.getAttributeValue("CenterElements");
+        int height = Integer.valueOf(canvasElement.getAttributeValue("Height"));
+        int width = Integer.valueOf(canvasElement.getAttributeValue("Width"));
+        String fill = canvasElement.getAttributeValue("Fill");
 
+        // create image of specified dimensions
+        logger.info("Creating working image...");
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = image.createGraphics();
-        // set the correct dimension of JPanel
-        // panel.setSize(Integer.valueOf(width), Integer.valueOf(height));
         // Elements
+        logger.info("Processing elements...");
         Element elementsElement = drawImageTemplateElement.getChild("Elements");
         for (Element element : elementsElement.getChildren()) {
             switch (element.getName()) {
@@ -144,10 +160,11 @@ public class MovieTemplateRenderer {
                     break;
             }
         }
+        return new ImagePanel(image);
     }
 
     private void processImageElement(Graphics2D g2, Element imageElement) throws Exception {
-        System.out.println("Processing " + imageElement.getAttributeValue("Name") + "...");
+        logger.info("Processing {}...", imageElement.getAttributeValue("Name"));
         int x = Integer.valueOf(imageElement.getAttributeValue("X"));
         int y = Integer.valueOf(imageElement.getAttributeValue("Y"));
         int width = Integer.valueOf(imageElement.getAttributeValue("Width"));
@@ -164,19 +181,22 @@ public class MovieTemplateRenderer {
                 BufferedImage tmpImage;
                 // load image from file
                 if (StringUtils.isEmpty(sourceData)) {
-                    tmpImage = ImageIO.read(new File(nullImageUrl));
+                    tmpImage = ImageIO.read(new File(nullImageUrl.replaceAll("\\\\", "/")));
                 } else {
-                    tmpImage = ImageIO.read(new File(sourceData));
+                    tmpImage = ImageIO.read(new File(sourceData.replaceAll("\\\\", "/")));
                 }
                 // verify if there are filters
-                List<Element> filters = imageElement.getChild("Actions").getChildren();
-                for (Element filter : filters) {
-                    switch (filter.getName()) {
-                        case "AdjustOpacity":
-                            break;
+                Element actions = imageElement.getChild("Actions");
+                if (actions != null) {
+                    List<Element> filters = actions.getChildren();
+                    for (Element filter : filters) {
+                        // TODO: implement filters
+                        switch (filter.getName()) {
+                            case "AdjustOpacity":
+                                break;
+                        }
                     }
                 }
-                // TODO: implement filters
                 g2.drawImage(tmpImage, x, y, width, height, null);
                 break;
             case "Base64String":
@@ -184,7 +204,7 @@ public class MovieTemplateRenderer {
 
                 break;
         }
-
+        logger.info("{} processed...", imageElement.getAttributeValue("Name"));
     }
 
     private void processTextElement(Graphics2D g2, Element textElement) {
