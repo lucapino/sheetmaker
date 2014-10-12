@@ -20,7 +20,11 @@ import static com.github.lucapino.sheetmaker.renderer.Constants.RESOLUTIONS;
 import static com.github.lucapino.sheetmaker.renderer.Constants.SETTINGS;
 import static com.github.lucapino.sheetmaker.renderer.Constants.SOUND_FORMATS;
 import static com.github.lucapino.sheetmaker.renderer.Constants.VIDEO_FORMATS;
+import com.jhlabs.image.BicubicScaleFilter;
+import com.jhlabs.image.OpacityFilter;
+import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
@@ -147,6 +151,8 @@ public class MovieTemplateRenderer {
         logger.info("Creating working image...");
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = image.createGraphics();
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
         // Elements
         logger.info("Processing elements...");
         Element elementsElement = drawImageTemplateElement.getChild("Elements");
@@ -160,6 +166,9 @@ public class MovieTemplateRenderer {
                     break;
             }
         }
+//        g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
+//        g2.setFont(new Font("Chancery Uralic", Font.BOLD, 60));
+//        g2.drawString("Test string", 300, 400);
         return new ImagePanel(image);
     }
 
@@ -175,34 +184,50 @@ public class MovieTemplateRenderer {
         String nullImageUrl = imageElement.getAttributeValue("NullImageUrl");
         String sourceDpi = imageElement.getAttributeValue("SourceDpi");
         boolean useSourceDpi = Boolean.valueOf(imageElement.getAttributeValue("UseSourceDpi"));
-
+        BufferedImage tmpImage = null;
         switch (sourceType) {
             case "File":
-                BufferedImage tmpImage;
                 // load image from file
                 if (StringUtils.isEmpty(sourceData)) {
                     tmpImage = ImageIO.read(new File(nullImageUrl.replaceAll("\\\\", "/")));
                 } else {
                     tmpImage = ImageIO.read(new File(sourceData.replaceAll("\\\\", "/")));
                 }
-                // verify if there are filters
-                Element actions = imageElement.getChild("Actions");
-                if (actions != null) {
-                    List<Element> filters = actions.getChildren();
-                    for (Element filter : filters) {
-                        // TODO: implement filters
-                        switch (filter.getName()) {
-                            case "AdjustOpacity":
-                                break;
-                        }
-                    }
-                }
-                g2.drawImage(tmpImage, x, y, width, height, null);
                 break;
             case "Base64String":
                 // use substitution to retrieve fileName
+                // RATINGSTARS
+                if (sourceData.equalsIgnoreCase("%RATINGSTARS%")) {
 
+                    BufferedImage stars = ImageIO.read(new FileInputStream(settings.getStarsRating().replaceAll("\\\\", "/")));
+
+                    // create stars
+                    float starsNumber = movie.getRating();
+                    int fullStarsNumber = (int) Math.floor(starsNumber);
+                    float starFraction = starsNumber - fullStarsNumber;
+
+                    // 1 star -> 24px, so 7.4 stars are 24x7.4 -> 178px
+                    BufferedImage singleStar = stars.getSubimage(0, 0, 24, 24);
+
+                    //Initializing the final image  
+                    tmpImage = new BufferedImage(width, height, singleStar.getType());
+                    Graphics2D g2i = tmpImage.createGraphics();
+                    for (int i = 0; i < fullStarsNumber; i++) {
+                        g2i.drawImage(singleStar, 24 * i, 0, null);
+                    }
+                    // crop the last star
+                    BufferedImage croppedStar = singleStar.getSubimage(0, 0, Math.round(24 * starFraction), 24);
+                    g2i.drawImage(croppedStar, 24 * fullStarsNumber, 0, null);
+                }
                 break;
+        }
+        if (tmpImage != null) {
+            // process actions
+            tmpImage = processActions(imageElement, tmpImage, g2);
+            // alway resize
+            BicubicScaleFilter scaleFilter = new BicubicScaleFilter(width, height);
+            tmpImage = scaleFilter.filter(tmpImage, null);
+            g2.drawImage(tmpImage, x, y, width, height, null);
         }
         logger.info("{} processed...", imageElement.getAttributeValue("Name"));
     }
@@ -219,6 +244,40 @@ public class MovieTemplateRenderer {
         templateString = templateString.replaceAll(FANART3, fanArt3FilePath);
         templateString = templateString.replaceAll(COVER, coverFilePath);
         return new StringReader(templateString);
+    }
+
+    private BufferedImage processActions(Element imageElement, BufferedImage tmpImage, Graphics2D g2) {
+        // verify if there are filters
+        Element actions = imageElement.getChild("Actions");
+        if (actions != null) {
+            List<Element> filters = actions.getChildren();
+            for (Element filter : filters) {
+                // TODO: implement filters
+                switch (filter.getName()) {
+                    // Crop
+                    // GlassTable
+                    // Glow
+                    // GaussianBlur
+                    // AdjustHue
+                    // AdjustGamma
+                    // RoundCorners
+                    // AdjustSaturation
+                    // AdjustBrightness
+                    case "AdjustOpacity":
+                        int opacity = Integer.valueOf(filter.getAttributeValue("Opacity")) * 255 / 100;
+                        OpacityFilter opacityFilter = new OpacityFilter(opacity);
+                        tmpImage = opacityFilter.filter(tmpImage, null);
+                        break;
+                    // PerspectiveView
+                    // Rotate
+                    // DropShadow
+                    // Skew
+                    // Flip
+
+                }
+            }
+        }
+        return tmpImage;
     }
 
 }
