@@ -76,4 +76,8 @@ public class MovieImpl implements Movie {
         return movieData.getOriginal();
     }
 
+    @Override
+    public Float getRating() {
+        return Float.valueOf(movieData.getMoviescore());
+    }
 }

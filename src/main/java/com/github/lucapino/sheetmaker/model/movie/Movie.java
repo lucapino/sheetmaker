@@ -34,5 +34,7 @@ public interface Movie {
     String getImdbId();
 
     String getOriginalTitle();
+    
+    Float getRating();
 
 }

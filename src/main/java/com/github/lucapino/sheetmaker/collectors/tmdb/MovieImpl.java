@@ -97,4 +97,8 @@ public class MovieImpl implements Movie {
         return movieData.getOriginalTitle();
     }
 
+    @Override
+    public Float getRating() {
+        return movieData.getVoteAverage();
+    }
 }
