@@ -20,14 +20,25 @@ import static com.github.lucapino.sheetmaker.renderer.Constants.RESOLUTIONS;
 import static com.github.lucapino.sheetmaker.renderer.Constants.SETTINGS;
 import static com.github.lucapino.sheetmaker.renderer.Constants.SOUND_FORMATS;
 import static com.github.lucapino.sheetmaker.renderer.Constants.VIDEO_FORMATS;
+import com.github.lucapino.sheetmaker.utils.ScreenImage;
 import com.jhlabs.image.BicubicScaleFilter;
 import com.jhlabs.image.OpacityFilter;
+import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.Shape;
+import java.awt.font.FontRenderContext;
+import java.awt.font.TextAttribute;
+import java.awt.font.TextLayout;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.StringReader;
 import java.net.URL;
 import java.util.HashMap;
@@ -234,6 +245,85 @@ public class MovieTemplateRenderer {
 
     private void processTextElement(Graphics2D g2, Element textElement) {
 
+        int x = Integer.valueOf(textElement.getAttributeValue("X"));
+        int y = Integer.valueOf(textElement.getAttributeValue("Y"));
+        int width = Integer.valueOf(textElement.getAttributeValue("Width"));
+        int height = Integer.valueOf(textElement.getAttributeValue("Height"));
+        Font font = parseFont(textElement.getAttributeValue("Font"));
+        // now get the text
+        String text = textElement.getAttributeValue("Text");
+//        FontMetrics fm = g2.getFontMetrics(font);
+//        FontRenderContext fontRendContext = g2.getFontRenderContext();
+//        TextLayout textLayout = new TextLayout(text, font, fontRendContext);
+//        Shape shape = textLayout.getOutline(null);
+//        Rectangle outlineBounds = fm.getStringBounds(text, g2).getBounds();
+        // we need to create a transparent image to paint
+//        BufferedImage tmpImage = new BufferedImage(outlineBounds.width, outlineBounds.height, BufferedImage.TYPE_INT_RGB);
+//        Graphics2D g2d = tmpImage.createGraphics();
+        // set current font
+        g2.setFont(font);
+//        g2d.setComposite(AlphaComposite.Clear);
+//        g2d.fillRect(0, 0, width, height);
+//        g2d.setComposite(AlphaComposite.Src);
+        // TODO: we have to parse it
+        int strokeWidth = Integer.valueOf(textElement.getAttributeValue("StrokeWidth"));
+        // the color of the outline
+        if (strokeWidth > 0) {
+//            Color strokeColor = new Color(Integer.valueOf(textElement.getAttributeValue("StrokeColor")));
+//            AffineTransform affineTransform;
+//            affineTransform = g2d.getTransform();
+//            affineTransform.translate(width / 2 - (outlineBounds.width / 2), height / 2
+//                    + (outlineBounds.height / 2));
+//            g2d.transform(affineTransform);
+//            // backup stroke width and color
+//            Stroke originalStroke = g2d.getStroke();
+//            Color originalColor = g2d.getColor();
+//            g2d.setColor(strokeColor);
+//            g2d.setStroke(new BasicStroke(strokeWidth));
+//            g2d.draw(shape);
+//            g2d.setClip(shape);
+//            // restore stroke width and color
+//            g2d.setStroke(originalStroke);
+//            g2d.setColor(originalColor);
+        }
+//        // get the text color
+        Color textColor = new Color(Integer.valueOf(textElement.getAttributeValue("ForeColor")));
+        g2.setColor(textColor);
+//        g2d.setBackground(Color.BLACK);
+//        g2d.setStroke(new BasicStroke(2));
+//        g2d.setColor(Color.WHITE);
+        // draw the text
+
+//        g2.drawString(text, x, y);
+        Rectangle rect = new Rectangle(x, y, width, height); // defines the desired size and position
+        FontMetrics fm = g2.getFontMetrics();
+        FontRenderContext frc = g2.getFontRenderContext();
+        TextLayout tl = new TextLayout(text, g2.getFont(), frc);
+        AffineTransform transform = new AffineTransform();
+        transform.setToTranslation(rect.getX(), rect.getY());
+        if (Boolean.valueOf(textElement.getAttributeValue("AutoSize"))) {
+            double scaleY
+                    = rect.getHeight() / (double) (tl.getOutline(null).getBounds().getMaxY()
+                    - tl.getOutline(null).getBounds().getMinY());
+            transform.scale(rect.getWidth() / (double) fm.stringWidth(text), scaleY);
+        }
+        Shape shape = tl.getOutline(transform);
+        g2.setClip(shape);
+        g2.fill(shape.getBounds());
+//        g2.drawString(text, x, y);
+
+        // alway resize
+//        BicubicScaleFilter scaleFilter = new BicubicScaleFilter(width, height);
+//        tmpImage = scaleFilter.filter(tmpImage, null);
+        // draw the image to the source
+        /*
+         g2.drawImage(tmpImage, x, y, width, height, null);
+         try {
+         ScreenImage.writeImage(tmpImage, "/tmp/images/" + textElement.getAttributeValue("Name") + ".png");
+         } catch (IOException ex) {
+
+         }
+         */
     }
 
     private StringReader filterTemplate(String templateString, Movie movie) {
@@ -278,6 +368,50 @@ public class MovieTemplateRenderer {
             }
         }
         return tmpImage;
+    }
+
+    private Font parseFont(String fontSpecs) {
+        // split attribute value to get font name and carachteristics
+        // bold, italic, underline, and strikeout.
+        // Size and Unit (Point, Pixel, Millimeter, Inch)
+        String[] fontSpecsArray = fontSpecs.split(",");
+        int fontStyle = Font.PLAIN;
+        boolean isUnderline = false;
+        boolean isStrikeout = false;
+        // TODO: manage unit
+        String unit;
+        // font name
+        String fontName = "Arial"; //fontSpecsArray[0];
+        int size = Integer.valueOf(fontSpecsArray[1]);
+        if (fontSpecsArray.length > 5) {
+            // her we have a full description
+            // bold
+            if (Boolean.valueOf(fontSpecsArray[2])) {
+                fontStyle += Font.BOLD;
+            }
+            // italic
+            if (Boolean.valueOf(fontSpecsArray[3])) {
+                fontStyle += Font.ITALIC;
+            }
+            // underline
+            isUnderline = Boolean.valueOf(fontSpecsArray[4]);
+            // strikeout
+            isStrikeout = Boolean.valueOf(fontSpecsArray[5]);
+            // unit
+            unit = fontSpecsArray[6];
+        } else {
+            // unit
+            unit = fontSpecsArray[2];
+        }
+        Font font = new Font(fontName, fontStyle, size);
+        Map attributes = font.getAttributes();
+        if (isStrikeout) {
+            attributes.put(TextAttribute.STRIKETHROUGH, TextAttribute.STRIKETHROUGH_ON);
+        }
+        if (isUnderline) {
+            attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+        }
+        return new Font(attributes);
     }
 
 }
