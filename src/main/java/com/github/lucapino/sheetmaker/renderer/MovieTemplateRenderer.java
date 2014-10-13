@@ -6,16 +6,10 @@
 package com.github.lucapino.sheetmaker.renderer;
 
 import com.github.lucapino.sheetmaker.model.movie.Movie;
-import static com.github.lucapino.sheetmaker.renderer.Constants.BACKGROUND;
 import static com.github.lucapino.sheetmaker.renderer.Constants.CANVAS;
-import static com.github.lucapino.sheetmaker.renderer.Constants.COVER;
-import static com.github.lucapino.sheetmaker.renderer.Constants.FANART1;
-import static com.github.lucapino.sheetmaker.renderer.Constants.FANART2;
-import static com.github.lucapino.sheetmaker.renderer.Constants.FANART3;
 import static com.github.lucapino.sheetmaker.renderer.Constants.IMAGE_DRAW_TEMPLATE;
 import static com.github.lucapino.sheetmaker.renderer.Constants.MEDIA_FORMATS;
 import static com.github.lucapino.sheetmaker.renderer.Constants.OUTPUT_IMAGE_SETTINGS;
-import static com.github.lucapino.sheetmaker.renderer.Constants.PATH;
 import static com.github.lucapino.sheetmaker.renderer.Constants.RESOLUTIONS;
 import static com.github.lucapino.sheetmaker.renderer.Constants.SETTINGS;
 import static com.github.lucapino.sheetmaker.renderer.Constants.SOUND_FORMATS;
@@ -233,16 +227,16 @@ public class MovieTemplateRenderer {
     }
 
     private void processTextElement(Graphics2D g2, Element textElement) {
-
+        
     }
 
     private StringReader filterTemplate(String templateString, Movie movie) {
-        templateString = templateString.replaceAll(PATH, basePath);
-        templateString = templateString.replaceAll(BACKGROUND, backgroundFilePath);
-        templateString = templateString.replaceAll(FANART1, fanArt1FilePath);
-        templateString = templateString.replaceAll(FANART2, fanArt2FilePath);
-        templateString = templateString.replaceAll(FANART3, fanArt3FilePath);
-        templateString = templateString.replaceAll(COVER, coverFilePath);
+        templateString = templateString.replaceAll("%PATH%", basePath);
+        templateString = templateString.replaceAll("%BACKGROUND%", backgroundFilePath);
+        templateString = templateString.replaceAll("%FANART1%", fanArt1FilePath);
+        templateString = templateString.replaceAll("%FANART2%", fanArt2FilePath);
+        templateString = templateString.replaceAll("%FANART3%", fanArt3FilePath);
+        templateString = templateString.replaceAll("%COVER%", coverFilePath);
         return new StringReader(templateString);
     }
 
