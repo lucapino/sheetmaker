@@ -13,28 +13,52 @@ import java.util.List;
  */
 public interface Movie {
 
+    // Inglorious Basterds
     String getTitle();
 
-    String getReleaseDate();
+    // Inglourious Basterds
+    String getOriginalTitle();
 
-    String getTagline();
-
+    // Some description of the movie
     String getPlot();
 
-    String getDuration();
+    // Some tagline
+    String getTagline();
 
-    List<String> getGenres();
+    // 2009
+    String getYear();
 
+    // [John Wayne, Jane Fonda]
     List<String> getActors();
 
+    // [Comedy, Drama]
+    List<String> getGenres();
+
+    // [Martin Scorsese]
     List<String> getDirectors();
 
-    String getId();
+    // PG-13
+    String getCertification();
 
-    String getImdbId();
+    // 23/08/2009 -> format using options
+    String getReleaseDate();
 
-    String getOriginalTitle();
+    // Rated XYZ for abc
+    String getMPAA();
     
-    Float getRating();
+    // tt1186370
+    String getImdbId();
+    
+    // [Germany, USA]
+    List<String> getCountries();
+    
+    // [Warner Bros., Pixar]
+    List<String> getStudios();
+    
+    // 68 (/100)
+    String getRatingPercent();
+    
+    // 134
+    String getRuntime();
 
 }

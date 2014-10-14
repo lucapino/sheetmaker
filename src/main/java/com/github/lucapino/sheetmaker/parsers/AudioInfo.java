@@ -11,9 +11,15 @@ package com.github.lucapino.sheetmaker.parsers;
  */
 public interface AudioInfo {
 
+    // DTS
+    String getSoundFormat();
+    
+    // A_DTS
     String getAudioCodec();
-
-    String getChannels();
-
-    String getSamplingRate();
+    
+    // 2
+    String getAudioChannels();
+    
+    // 128 Kbps
+    String getAudioBitrate();
 }

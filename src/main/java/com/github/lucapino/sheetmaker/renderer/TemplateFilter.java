@@ -39,7 +39,7 @@ public class TemplateFilter {
             case "%COUNTRIES%":
                 break;
             case "%RUNTIME%":
-                result = movie.getDuration();
+                result = movie.getRuntime();
                 break;
             case "%RELEASEDATE%":
                 result = movie.getReleaseDate();
@@ -65,7 +65,7 @@ public class TemplateFilter {
                 break;
             case "%DURATIONTEXT%":
                 // TODO: convert in minutes
-                result = movie.getDuration();
+                result = movieInfo.getDuration();
                 break;
             case "%VIDEORESOLUTIONTEXT%":
                 break;
@@ -73,7 +73,7 @@ public class TemplateFilter {
                 result = movieInfo.getFrameRate();
                 break;
             case "%AUDIOCODECTEXT%":
-                result = movieInfo.getAudioInfo().get(0).getAudioCodec();
+                result = movieInfo.getAllAudioInfo().get(0).getAudioCodec();
                 break;
             case "%ASPECTRATIOTEXT%":
                 result = movieInfo.getAspectRatio();

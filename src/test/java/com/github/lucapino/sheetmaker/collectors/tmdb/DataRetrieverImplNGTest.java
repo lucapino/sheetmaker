@@ -79,7 +79,6 @@ public class DataRetrieverImplNGTest {
         Movie result = instance.retrieveMovieFromImdbID(imdbID, language);
         assertEquals(result.getTitle().toLowerCase(), "l'era glaciale");
         assertEquals(result.getImdbId(), "tt0268380");
-        assertEquals(result.getId(), "425");
     }
 
     /**

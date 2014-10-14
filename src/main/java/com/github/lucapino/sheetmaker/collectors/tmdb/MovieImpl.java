@@ -10,6 +10,8 @@ import com.omertron.themoviedbapi.model.Genre;
 import com.omertron.themoviedbapi.model.MovieDb;
 import com.omertron.themoviedbapi.model.PersonCast;
 import com.omertron.themoviedbapi.model.PersonCrew;
+import com.omertron.themoviedbapi.model.ProductionCompany;
+import com.omertron.themoviedbapi.model.ProductionCountry;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,11 +48,6 @@ public class MovieImpl implements Movie {
     }
 
     @Override
-    public String getDuration() {
-        return "" + movieData.getRuntime();
-    }
-
-    @Override
     public List<String> getGenres() {
         List<String> results = new ArrayList<>();
         List<Genre> genres = movieData.getGenres();
@@ -83,11 +80,6 @@ public class MovieImpl implements Movie {
     }
 
     @Override
-    public String getId() {
-        return "" + movieData.getId();
-    }
-
-    @Override
     public String getImdbId() {
         return movieData.getImdbID();
     }
@@ -98,7 +90,45 @@ public class MovieImpl implements Movie {
     }
 
     @Override
-    public Float getRating() {
-        return movieData.getVoteAverage();
+    public String getYear() {
+        return movieData.getReleaseDate().split("-")[0];
+    }
+
+    @Override
+    public String getCertification() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String getMPAA() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<String> getCountries() {
+        List<String> results = new ArrayList<>();
+        for (ProductionCountry productionCountry : movieData.getProductionCountries()) {
+            results.add(productionCountry.getName());
+        }
+        return results;
+    }
+
+    @Override
+    public List<String> getStudios() {
+        List<String> results = new ArrayList<>();
+        for (ProductionCompany productionCompany : movieData.getProductionCompanies()) {
+            results.add(productionCompany.getName());
+        }
+        return results;
+    }
+
+    @Override
+    public String getRatingPercent() {
+        return "" + (movieData.getVoteAverage() * 10);
+    }
+
+    @Override
+    public String getRuntime() {
+        return "" + movieData.getRuntime();
     }
 }

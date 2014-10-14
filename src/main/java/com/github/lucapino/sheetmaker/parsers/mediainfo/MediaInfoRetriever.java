@@ -18,7 +18,12 @@ public class MediaInfoRetriever implements InfoRetriever {
     
     @Override
     public MovieInfo getMovieInfo(String filePath) {
-        return null;
+        MovieInfo result = null;
+        MediaInfo mediaInfo = new MediaInfo();
+        mediaInfo.Open(filePath);
+        
+        return result;
+        
     }
     
 }

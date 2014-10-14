@@ -42,11 +42,6 @@ public class MovieImpl implements Movie {
     }
 
     @Override
-    public String getDuration() {
-        return movieData.getDuration();
-    }
-
-    @Override
     public List<String> getGenres() {
         return movieData.getGenres();
     }
@@ -62,11 +57,6 @@ public class MovieImpl implements Movie {
     }
 
     @Override
-    public String getId() {
-        return movieData.getId();
-    }
-
-    @Override
     public String getImdbId() {
         return movieData.getImdbid();
     }
@@ -77,7 +67,37 @@ public class MovieImpl implements Movie {
     }
 
     @Override
-    public Float getRating() {
-        return Float.valueOf(movieData.getMoviescore());
+    public String getYear() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String getCertification() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String getMPAA() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<String> getCountries() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<String> getStudios() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String getRatingPercent() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String getRuntime() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

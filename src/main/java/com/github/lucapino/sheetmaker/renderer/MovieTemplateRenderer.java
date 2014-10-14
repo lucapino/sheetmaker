@@ -207,7 +207,7 @@ public class MovieTemplateRenderer {
                     BufferedImage stars = ImageIO.read(new FileInputStream(settings.getStarsRating().replaceAll("\\\\", "/")));
 
                     // create stars
-                    float starsNumber = movie.getRating();
+                    float starsNumber = Float.valueOf(movie.getRatingPercent()) / 10F;
                     int fullStarsNumber = (int) Math.floor(starsNumber);
                     float starFraction = starsNumber - fullStarsNumber;
 
