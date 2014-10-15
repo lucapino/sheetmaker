@@ -9,6 +9,7 @@ import com.github.lucapino.sheetmaker.parsers.mediainfo.MediaInfo;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -30,55 +31,62 @@ public class ImplementationTest {
 
     @Test
     public void testImplementation() throws Exception {
-        Map<Integer, String> ifoFiles = new TreeMap<>();
-        FileSystemManager fsManager = VFS.getManager();
-        FileObject fo = fsManager.resolveFile("iso:/home/tagliani/Video/pirati.iso!/");
-        FileSelector ifoFs = new FileFilterSelector(new FileFilter() {
-
-            @Override
-            public boolean accept(FileSelectInfo fsi) {
-                return fsi.getFile().getName().getBaseName().toLowerCase().endsWith("ifo");
-            }
-        });
-        MediaInfo mi = new MediaInfo();
-        FileObject[] files = fo.getChild("VIDEO_TS").findFiles(ifoFs);
-        for (int i = 0; i < files.length; i++) {
-            File tmpFile = new File(System.getProperty("java.io.tmpdir") + File.separator + files[i].getName().getBaseName());
-            System.out.println(files[i].getName().getBaseName());
-            IOUtils.copy(files[i].getContent().getInputStream(), new FileOutputStream(tmpFile));
-            mi.Open(tmpFile.getAbsolutePath());
-            String format = mi.Get(MediaInfo.StreamKind.General, 0, "Format_Profile", MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name);
-            System.out.println("Format profile: " + format);
-            // if format is "Program" -> it's a video file
-            if (format.equalsIgnoreCase("program")) {
-                String duration = mi.Get(MediaInfo.StreamKind.General, 0, "Duration", MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name);
-                System.out.println("Duration: " + duration);
-                ifoFiles.put(Integer.valueOf(duration), tmpFile.getAbsolutePath());
-            }
-            mi.Close();
+        String[] languages = {"it", "fr", "es", "de"};
+        for (String language : languages) {
+            Locale langlocale = Locale.forLanguageTag(language);
+            System.out.println(language + ": " + langlocale.getDisplayLanguage(langlocale));
         }
-        if (!ifoFiles.isEmpty()) {
-            String fileToParse = null;
-            if (ifoFiles.size() == 1) {
-                fileToParse = ifoFiles.values().iterator().next();
-            } else {
-                // get the last entry -> the bigger one
-                Set<Integer> keys = ifoFiles.keySet();
-                Iterator<Integer> iterator = keys.iterator();
-                for (int i = 0; i < keys.size(); i++) {
-                    String fileName = ifoFiles.get(iterator.next());
-                    if (i == keys.size() - 1) {
-                        fileToParse = fileName;
-                    } else {
-                        new File(fileName).delete();
-                    }
-                }
-            }
-            if (fileToParse != null) {
-                mi.Open(fileToParse);
-                System.out.println(mi.Inform());
-            }
-        }
+        
+        
+//        Map<Integer, String> ifoFiles = new TreeMap<>();
+//        FileSystemManager fsManager = VFS.getManager();
+//        FileObject fo = fsManager.resolveFile("iso:/home/tagliani/Video/pirati.iso!/");
+//        FileSelector ifoFs = new FileFilterSelector(new FileFilter() {
+//
+//            @Override
+//            public boolean accept(FileSelectInfo fsi) {
+//                return fsi.getFile().getName().getBaseName().toLowerCase().endsWith("ifo");
+//            }
+//        });
+//        MediaInfo mi = new MediaInfo();
+//        FileObject[] files = fo.getChild("VIDEO_TS").findFiles(ifoFs);
+//        for (int i = 0; i < files.length; i++) {
+//            File tmpFile = new File(System.getProperty("java.io.tmpdir") + File.separator + files[i].getName().getBaseName());
+//            System.out.println(files[i].getName().getBaseName());
+//            IOUtils.copy(files[i].getContent().getInputStream(), new FileOutputStream(tmpFile));
+//            mi.Open(tmpFile.getAbsolutePath());
+//            String format = mi.Get(MediaInfo.StreamKind.General, 0, "Format_Profile", MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name);
+//            System.out.println("Format profile: " + format);
+//            // if format is "Program" -> it's a video file
+//            if (format.equalsIgnoreCase("program")) {
+//                String duration = mi.Get(MediaInfo.StreamKind.General, 0, "Duration", MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name);
+//                System.out.println("Duration: " + duration);
+//                ifoFiles.put(Integer.valueOf(duration), tmpFile.getAbsolutePath());
+//            }
+//            mi.Close();
+//        }
+//        if (!ifoFiles.isEmpty()) {
+//            String fileToParse = null;
+//            if (ifoFiles.size() == 1) {
+//                fileToParse = ifoFiles.values().iterator().next();
+//            } else {
+//                // get the last entry -> the bigger one
+//                Set<Integer> keys = ifoFiles.keySet();
+//                Iterator<Integer> iterator = keys.iterator();
+//                for (int i = 0; i < keys.size(); i++) {
+//                    String fileName = ifoFiles.get(iterator.next());
+//                    if (i == keys.size() - 1) {
+//                        fileToParse = fileName;
+//                    } else {
+//                        new File(fileName).delete();
+//                    }
+//                }
+//            }
+//            if (fileToParse != null) {
+//                mi.Open(fileToParse);
+//                System.out.println(mi.Inform());
+//            }
+//        }
 
 //        FileFilter filter = new FileFilter() {
 //

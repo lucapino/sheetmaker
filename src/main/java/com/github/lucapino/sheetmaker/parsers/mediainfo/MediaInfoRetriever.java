@@ -9,6 +9,7 @@ import com.github.lucapino.sheetmaker.parsers.InfoRetriever;
 import com.github.lucapino.sheetmaker.parsers.MovieInfo;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -30,6 +31,9 @@ public class MediaInfoRetriever implements InfoRetriever {
 
     @Override
     public MovieInfo getMovieInfo(String filePath) {
+        MediaInfo mediaInfo = new MediaInfo();
+        String fileToParse = filePath;
+        // test if we have iso
         if (filePath.toLowerCase().endsWith("iso")) {
             // open iso and parse the ifo files
             Map<Integer, String> ifoFiles = new TreeMap<>();
@@ -44,25 +48,23 @@ public class MediaInfoRetriever implements InfoRetriever {
                         return fsi.getFile().getName().getBaseName().toLowerCase().endsWith("ifo");
                     }
                 });
-                MediaInfo mi = new MediaInfo();
                 FileObject[] files = fo.getChild("VIDEO_TS").findFiles(ifoFs);
                 for (int i = 0; i < files.length; i++) {
                     File tmpFile = new File(System.getProperty("java.io.tmpdir") + File.separator + files[i].getName().getBaseName());
                     System.out.println(files[i].getName().getBaseName());
                     IOUtils.copy(files[i].getContent().getInputStream(), new FileOutputStream(tmpFile));
-                    mi.Open(tmpFile.getAbsolutePath());
-                    String format = mi.Get(MediaInfo.StreamKind.General, 0, "Format_Profile", MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name);
+                    mediaInfo.Open(tmpFile.getAbsolutePath());
+                    String format = mediaInfo.Get(MediaInfo.StreamKind.General, 0, "Format_Profile", MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name);
                     System.out.println("Format profile: " + format);
                     // if format is "Program" -> it's a video file
                     if (format.equalsIgnoreCase("program")) {
-                        String duration = mi.Get(MediaInfo.StreamKind.General, 0, "Duration", MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name);
+                        String duration = mediaInfo.Get(MediaInfo.StreamKind.General, 0, "Duration", MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name);
                         System.out.println("Duration: " + duration);
                         ifoFiles.put(Integer.valueOf(duration), tmpFile.getName());
                     }
-                    mi.Close();
+                    mediaInfo.Close();
                 }
                 if (!ifoFiles.isEmpty()) {
-                    String fileToParse = null;
                     if (ifoFiles.size() == 1) {
                         fileToParse = ifoFiles.values().iterator().next();
                     } else {
@@ -78,21 +80,16 @@ public class MediaInfoRetriever implements InfoRetriever {
                             }
                         }
                     }
-                    if (fileToParse != null) {
-                        mi.Open(fileToParse);
-                        System.out.println(mi.Inform());
-                    }
                 }
-            } catch (Exception ex) {
+            } catch (IOException | NumberFormatException ex) {
 
             }
         }
-        MovieInfo result = null;
-        MediaInfo mediaInfo = new MediaInfo();
-        mediaInfo.Open(filePath);
+        // here fileToParse is correct
+        mediaInfo.Open(fileToParse);
+        System.out.println(mediaInfo.Inform());
 
-        return result;
-
+        return new MovieInfoImpl(mediaInfo);
     }
 
 }
