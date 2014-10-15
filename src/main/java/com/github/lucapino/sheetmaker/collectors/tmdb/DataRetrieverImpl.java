@@ -100,7 +100,7 @@ public class DataRetrieverImpl implements DataRetriever {
     public Movie retrieveMovieFromImdbID(String imdbID, String language) {
         MovieImpl movieInfo = null;
         try {
-            MovieDb movieData = api.getMovieInfoImdb(imdbID, language);
+            MovieDb movieData = api.getMovieInfoImdb(imdbID, language, "alternative_titles,casts,images,keywords,releases,trailers,translations,similar_movies,reviews,lists");
             if (movieData != null) {
                 movieInfo = new MovieImpl(movieData);
             }
@@ -146,16 +146,15 @@ public class DataRetrieverImpl implements DataRetriever {
     public List<Artwork> getBackdrops(String imdbID) {
         return getArtworks(imdbID, ArtworkType.BACKDROP);
     }
-    
+
     private List<Artwork> getArtworks(String imdbID, ArtworkType artworkType) {
         List<Artwork> artworks = new ArrayList<>();
         try {
-            MovieDb movieData = api.getMovieInfoImdb(imdbID, null);
+            MovieDb movieData = api.getMovieInfoImdb(imdbID, null, "images");
             if (movieData != null) {
-                List<com.omertron.themoviedbapi.model.Artwork> images = api.getMovieImages(movieData.getId(), null).getResults();
-                for (com.omertron.themoviedbapi.model.Artwork image : images) {
+                for (com.omertron.themoviedbapi.model.Artwork image : movieData.getImages()) {
                     if (image.getArtworkType() == artworkType) {
-                        switch(artworkType) {
+                        switch (artworkType) {
                             case POSTER:
                                 artworks.add(new PosterArtworkImpl(configuration.getBaseUrl(), image));
                                 break;
