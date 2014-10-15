@@ -97,4 +97,6 @@ public interface MovieInfo {
     // Info of all audio tracks, including default one    
     List<AudioInfo> getAllAudioInfo();
     
+    void close();
+    
 }

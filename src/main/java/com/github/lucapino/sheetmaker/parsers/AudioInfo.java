@@ -5,6 +5,8 @@
  */
 package com.github.lucapino.sheetmaker.parsers;
 
+import java.util.List;
+
 /**
  *
  * @author tagliani
@@ -13,13 +15,19 @@ public interface AudioInfo {
 
     // DTS
     String getSoundFormat();
-    
+
     // A_DTS
     String getAudioCodec();
-    
+
     // 2
     String getAudioChannels();
-    
+
     // 128 Kbps
     String getAudioBitrate();
+
+    // it
+    String getLanguageCode();
+
+    // Italian
+    String getLanguage();
 }

@@ -89,7 +89,7 @@ public class MediaInfoRetriever implements InfoRetriever {
         mediaInfo.Open(fileToParse);
         System.out.println(mediaInfo.Inform());
 
-        return new MovieInfoImpl(mediaInfo);
+        return new MovieInfoImpl(mediaInfo, filePath);
     }
 
 }

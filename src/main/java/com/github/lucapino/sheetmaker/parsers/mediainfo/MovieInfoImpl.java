@@ -11,6 +11,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -22,23 +23,25 @@ public class MovieInfoImpl implements MovieInfo {
     private final MediaInfo mediaInfo;
     private final File mediaFile;
 
-    public MovieInfoImpl(MediaInfo mediaInfo) {
+    public MovieInfoImpl(MediaInfo mediaInfo, String realfilePath) {
         this.mediaInfo = mediaInfo;
-        this.mediaFile = new File(mediaInfo.Get(MediaInfo.StreamKind.General, 0, "CompleteName", MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name));
+        String mediaInfoFilePath = mediaInfo.Get(MediaInfo.StreamKind.General, 0, "CompleteName", MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name);
+        if (mediaInfoFilePath.equals(realfilePath)) {
+            this.mediaFile = new File(mediaInfoFilePath);
+        } else {
+            this.mediaFile = new File(realfilePath);
+        }
+
     }
 
     @Override
     public String getTitlePath() {
-        return mediaInfo.Get(MediaInfo.StreamKind.General, 0, "FolderName", MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name);
+        return mediaFile.getParent();
     }
 
     @Override
     public String getMovieFileName() {
-        StringBuilder result = new StringBuilder();
-        result.append(mediaInfo.Get(MediaInfo.StreamKind.General, 0, "FileName", MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name));
-        result.append(".");
-        result.append(mediaInfo.Get(MediaInfo.StreamKind.General, 0, "FileExtension", MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name));
-        return result.toString();
+        return mediaFile.getName();
     }
 
     @Override
@@ -66,17 +69,31 @@ public class MovieInfoImpl implements MovieInfo {
 //    $provider_hash->{EXTERNALSUBTITLESTEXT}		= '';
     @Override
     public List<String> getAllSubtitles() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<String> result = new ArrayList<>();
+        result.addAll(getEmbeddedSubtitles());
+        result.addAll(getExternalSubtitles());
+        return result;
     }
 
     @Override
     public List<String> getAllLocalizedSubtitles() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<String> subtitles = new ArrayList<>();
+        int number = mediaInfo.Count_Get(MediaInfo.StreamKind.Text);
+        for (int i = 0; i < number; i++) {
+            String countryCode = mediaInfo.Get(MediaInfo.StreamKind.Text, i, "Language", MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name);
+            subtitles.add(localizeLanguage(countryCode));
+        }
+        return subtitles;
     }
 
     @Override
     public List<String> getEmbeddedSubtitles() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<String> subtitles = new ArrayList<>();
+        int number = mediaInfo.Count_Get(MediaInfo.StreamKind.Text);
+        for (int i = 0; i < number; i++) {
+            subtitles.add(mediaInfo.Get(MediaInfo.StreamKind.Text, i, "Language/String", MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name));
+        }
+        return subtitles;
     }
 
     @Override
@@ -92,10 +109,191 @@ public class MovieInfoImpl implements MovieInfo {
 
     @Override
     public String getSoundFormat() {
+        return getSoundFormat(0);
+    }
+
+    @Override
+    public String getResolution() {
+//        # figure out the resolution.
+//        # if the aspect ratio is 4:3 take the width/4*3 to get the resolution
+//        # if the aspect ratio is 16:9 its width/16*9 
+//        # else its something odd like 2.35:1 (still 16/9 more or less) just key off of the width
+//        # typical resolutions are
+//        #  288P 480I 480P 576I 576P 720I 720P 1080I 1080P
+//
+        String resolution = "";
+        String suffix = mediaInfo.Get(MediaInfo.StreamKind.Video, 0, "ScanType", MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name).substring(0, 1);
+//        my $suffix	= lc(substr($media_info->{Mediainfo}->{File}->{track}->[1]->{Scan_type},0,1)) ;
+        String videoWidth = mediaInfo.Get(MediaInfo.StreamKind.Video, 0, "Width", MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name);
+//        my $width	= lc($media_info->{Mediainfo}->{File}->{track}->[1]->{Width}) ;
+//        $width =~ s/\D//g;
+//
+        if (getAspectRatio().equals("4:3")) {
+            resolution = (Integer.valueOf(videoWidth) / 4 * 3) + suffix;
+//        if ($provider_hash->{ASPECTRATIOTEXT} eq "4:3" )  { 
+//                Logger($config_options,"Calculating Resolution for apectratio 4:3 width=$width suffix=$suffix","DEBUG");
+//                $provider_hash->{RESOLUTION} = sprintf ("%d%s",($width/4*3),$suffix); 
+//        } 
+        } else if (getAspectRatio().equals("16:9") || getAspectRatio().equals("16x9")) {
+            resolution = (Integer.valueOf(videoWidth) / 16 * 9) + suffix;
+//        elsif ($provider_hash->{ASPECTRATIOTEXT} eq "16x9" ) {
+//                Logger($config_options,"Calculating Resolution for apectratio 16:9 width=$width suffix=$suffix","DEBUG");
+//                $provider_hash->{RESOLUTION} = sprintf ("%d%s",($width/16*9),$suffix); 
+//        }
+        } else if (videoWidth.equals("1920")) {
+            resolution = "1080" + suffix;
+//        elsif ($width == 1920) { 
+//                Logger($config_options,"Calculating Resolution for width=$width suffix=$suffix","DEBUG");
+//                $provider_hash->{RESOLUTION} = sprintf ("1080%s",$suffix); 
+//        }
+        } else if (videoWidth.equals("1280")) {
+            resolution = "720" + suffix;
+//        elsif ($width == 1280) { 
+//                Logger($config_options,"Calculating Resolution for width=$width suffix=$suffix","DEBUG");
+//                $provider_hash->{RESOLUTION} = sprintf ("720%s",$suffix); 
+//        }
+        } else if (videoWidth.equals("720")) {
+            resolution = "576" + suffix;
+//        elsif ($width == 720) { 
+//                Logger($config_options,"Calculating Resolution for width=$width suffix=$suffix","DEBUG");
+//                $provider_hash->{RESOLUTION} = sprintf ("576%s",$suffix); 
+//        }
+        } else if (videoWidth.equals("640")) {
+            resolution = "480" + suffix;
+//        elsif ($width == 640) { 
+//                Logger($config_options,"Calculating Resolution for width=$width suffix=$suffix","DEBUG");
+//                $provider_hash->{RESOLUTION} = sprintf ("480%s",$suffix); 
+//        }
+        }
+//        else { $provider_hash->{RESOLUTION} = "" ; }
+//
+        return resolution;
+//        Logger($config_options,"Resolution has been determined to be [36m".$provider_hash->{RESOLUTION},"DEBUG");
+    }
+
+    @Override
+    public String getVideoFormat() {
+//        # supported values		Divx, xvid, wmv, avc, mpeg 
+        String videoFormat = mediaInfo.Get(MediaInfo.StreamKind.Video, 0, "Format", MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name);
+        videoFormat = videoFormat.replaceAll("mpeg-4 visual", "divx");
+//        $provider_hash->{VIDEOFORMAT}					= lc($media_info->{Mediainfo}->{File}->{track}->[1]->{Format});
+//        $provider_hash->{VIDEOFORMAT}					=~ s/mpeg-4 visual/divx/i;
+        return videoFormat;
+    }
+
+    @Override
+    public String getFrameRate() {
+        String frameRate = mediaInfo.Get(MediaInfo.StreamKind.Video, 0, "FrameRate", MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name);
+        frameRate = frameRate.replaceAll("\\w*fps", "");
+//    $provider_hash->{FRAMERATETEXT}				= $media_info->{Mediainfo}->{File}->{track}->[1]->{Frame_rate};
+//    $provider_hash->{FRAMERATETEXT}				=~ s/\w*fps//;
+        return frameRate;
+    }
+
+    @Override
+    public String getAspectRatio() {
+//    $provider_hash->{ASPECTRATIOTEXT}			= $media_info->{Mediainfo}->{File}->{track}->[1]->{Display_aspect_ratio};
+        return mediaInfo.Get(MediaInfo.StreamKind.Video, 0, "DisplayAspectRatio", MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name).substring(0, 1);
+    }
+
+    @Override
+    public String getVideoResolution() {
+        String videoWidth = mediaInfo.Get(MediaInfo.StreamKind.Video, 0, "Width", MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name);
+        String videoHeight = mediaInfo.Get(MediaInfo.StreamKind.Video, 0, "Height", MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name);
+//    $provider_hash->{VIDEORESOLUTIONTEXT}	= sprintf("%sx%s",$media_info->{Mediainfo}->{File}->{track}->[1]->{Width},$media_info->{Mediainfo}->{File}->{track}->[1]->{Height});
+//    $provider_hash->{VIDEORESOLUTIONTEXT} =~ s/pixels//g;
+//    $provider_hash->{VIDEORESOLUTIONTEXT} =~ s/\s//g;
+        return String.format("%sx%s", videoWidth, videoHeight);
+    }
+
+    @Override
+    public String getVideoBitrate() {
+//    $provider_hash->{VIDEOBITRATETEXT}		= $media_info->{Mediainfo}->{File}->{track}->[1]->{Bit_rate}; 
+        return mediaInfo.Get(MediaInfo.StreamKind.Video, 0, "BitRate_Nominal", MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name);
+    }
+
+    @Override
+    public String getAudioCodec() {
+        return getAudioCodec(0);
+    }
+
+    @Override
+    public String getAudioChannels() {
+        return getAudioChannels(0);
+    }
+
+    @Override
+    public String getAudioBitrate() {
+        return getAudioBitrate(0);
+    }
+
+    @Override
+    public String getDuration() {
+//    $provider_hash->{DURATIONTEXT}				= $media_info->{Mediainfo}->{File}->{track}->[1]->{Duration};
+        return mediaInfo.Get(MediaInfo.StreamKind.Video, 0, "Duration", MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name);
+    }
+
+    @Override
+    public String getFileSize() {
+        return "" + FileUtils.sizeOf(mediaFile);
+    }
+
+    @Override
+    public String getContainer() {
+//    $provider_hash->{CONTAINERTEXT}				= lc($media_info->{Mediainfo}->{File}->{track}->[0]->{Format});
+        return mediaInfo.Get(MediaInfo.StreamKind.General, 0, "Format", MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name);
+    }
+
+    @Override
+    public String getLanguageCode() {
+        return getLanguageCode(0);
+    }
+
+    @Override
+    public String getLanguage() {
+        return getLanguage(0);
+    }
+
+    @Override
+    public List<String> getAllLanguages() {
+        List<String> languages = new ArrayList<>();
+        int number = mediaInfo.Count_Get(MediaInfo.StreamKind.Audio);
+        for (int i = 0; i < number; i++) {
+            languages.add(mediaInfo.Get(MediaInfo.StreamKind.Audio, i, "Language/String", MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name));
+        }
+        return languages;
+    }
+
+    @Override
+    public List<String> getAllLanguageCodes() {
+        List<String> languages = new ArrayList<>();
+        int number = mediaInfo.Count_Get(MediaInfo.StreamKind.Audio);
+        for (int i = 0; i < number; i++) {
+            languages.add(mediaInfo.Get(MediaInfo.StreamKind.Audio, i, "Language", MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name));
+        }
+        return languages;
+    }
+
+    @Override
+    public List<AudioInfo> getAllAudioInfo() {
+        List<AudioInfo> result = new ArrayList<>();
+        int number = mediaInfo.Count_Get(MediaInfo.StreamKind.Audio);
+        for (int i = 0; i < number; i++) {
+            result.add(new AudioInfoImpl(this, number));
+        }
+        return result;
+    }
+
+    String localizeLanguage(String language) {
+        Locale langlocale = Locale.forLanguageTag(language);
+        return StringUtils.capitalize(langlocale.getDisplayLanguage(langlocale));
+    }
+
+    String getSoundFormat(int audioStreamNumber) {
 //        # supported values AAC51, AAC, AAC20, DD51, DD20, DTS51, MP3, FLAC, WMA, VORBIS, DTSHD, DTRUEHD
-        String audioCodec = mediaInfo.Get(MediaInfo.StreamKind.Audio, 2, "Format", MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name);
+        String audioCodec = mediaInfo.Get(MediaInfo.StreamKind.Audio, audioStreamNumber, "Format", MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name);
 //        my $audio_codec = lc($media_info->{Mediainfo}->{File}->{track}->[2]->{Format});
-        Integer channels = Integer.valueOf(mediaInfo.Get(MediaInfo.StreamKind.Audio, 2, "Channel(s)", MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name));
+        Integer channels = Integer.valueOf(mediaInfo.Get(MediaInfo.StreamKind.Audio, audioStreamNumber, "Channel(s)", MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name));
 //        my $channels=$media_info->{Mediainfo}->{File}->{track}->[2]->{Channel_s_};
 //        $channels =~ s/\D//g;
         String soundFormat = "";
@@ -196,150 +394,27 @@ public class MovieInfoImpl implements MovieInfo {
         return soundFormat;
     }
 
-    @Override
-    public String getResolution() {
-//        # figure out the resolution.
-//        # if the aspect ratio is 4:3 take the width/4*3 to get the resolution
-//        # if the aspect ratio is 16:9 its width/16*9 
-//        # else its something odd like 2.35:1 (still 16/9 more or less) just key off of the width
-//        # typical resolutions are
-//        #  288P 480I 480P 576I 576P 720I 720P 1080I 1080P
-//
-        String resolution = "";
-        String suffix = mediaInfo.Get(MediaInfo.StreamKind.Video, 1, "ScanType", MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name).substring(0, 1);
-//        my $suffix	= lc(substr($media_info->{Mediainfo}->{File}->{track}->[1]->{Scan_type},0,1)) ;
-        String videoWidth = mediaInfo.Get(MediaInfo.StreamKind.Video, 1, "Width", MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name);
-//        my $width	= lc($media_info->{Mediainfo}->{File}->{track}->[1]->{Width}) ;
-//        $width =~ s/\D//g;
-//
-        if (getAspectRatio().equals("4:3")) {
-            resolution = (Integer.valueOf(videoWidth) / 4 * 3) + suffix;
-//        if ($provider_hash->{ASPECTRATIOTEXT} eq "4:3" )  { 
-//                Logger($config_options,"Calculating Resolution for apectratio 4:3 width=$width suffix=$suffix","DEBUG");
-//                $provider_hash->{RESOLUTION} = sprintf ("%d%s",($width/4*3),$suffix); 
-//        } 
-        } else if (getAspectRatio().equals("16:9") || getAspectRatio().equals("16x9")) {
-            resolution = (Integer.valueOf(videoWidth) / 16 * 9) + suffix;
-//        elsif ($provider_hash->{ASPECTRATIOTEXT} eq "16x9" ) {
-//                Logger($config_options,"Calculating Resolution for apectratio 16:9 width=$width suffix=$suffix","DEBUG");
-//                $provider_hash->{RESOLUTION} = sprintf ("%d%s",($width/16*9),$suffix); 
-//        }
-        } else if (videoWidth.equals("1920")) {
-            resolution = "1080" + suffix;
-//        elsif ($width == 1920) { 
-//                Logger($config_options,"Calculating Resolution for width=$width suffix=$suffix","DEBUG");
-//                $provider_hash->{RESOLUTION} = sprintf ("1080%s",$suffix); 
-//        }
-        } else if (videoWidth.equals("1280")) {
-            resolution = "720" + suffix;
-//        elsif ($width == 1280) { 
-//                Logger($config_options,"Calculating Resolution for width=$width suffix=$suffix","DEBUG");
-//                $provider_hash->{RESOLUTION} = sprintf ("720%s",$suffix); 
-//        }
-        } else if (videoWidth.equals("720")) {
-            resolution = "576" + suffix;
-//        elsif ($width == 720) { 
-//                Logger($config_options,"Calculating Resolution for width=$width suffix=$suffix","DEBUG");
-//                $provider_hash->{RESOLUTION} = sprintf ("576%s",$suffix); 
-//        }
-        } else if (videoWidth.equals("640")) {
-            resolution = "480" + suffix;
-//        elsif ($width == 640) { 
-//                Logger($config_options,"Calculating Resolution for width=$width suffix=$suffix","DEBUG");
-//                $provider_hash->{RESOLUTION} = sprintf ("480%s",$suffix); 
-//        }
-        }
-//        else { $provider_hash->{RESOLUTION} = "" ; }
-//
-        return resolution;
-//        Logger($config_options,"Resolution has been determined to be [36m".$provider_hash->{RESOLUTION},"DEBUG");
-    }
-
-    @Override
-    public String getVideoFormat() {
-//        # supported values		Divx, xvid, wmv, avc, mpeg 
-        String videoFormat = mediaInfo.Get(MediaInfo.StreamKind.Video, 1, "Format", MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name);
-        videoFormat = videoFormat.replaceAll("mpeg-4 visual", "divx");
-//        $provider_hash->{VIDEOFORMAT}					= lc($media_info->{Mediainfo}->{File}->{track}->[1]->{Format});
-//        $provider_hash->{VIDEOFORMAT}					=~ s/mpeg-4 visual/divx/i;
-        return videoFormat;
-    }
-
-    @Override
-    public String getFrameRate() {
-        String frameRate = mediaInfo.Get(MediaInfo.StreamKind.Video, 1, "FrameRate", MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name);
-        frameRate = frameRate.replaceAll("\\w*fps", "");
-//    $provider_hash->{FRAMERATETEXT}				= $media_info->{Mediainfo}->{File}->{track}->[1]->{Frame_rate};
-//    $provider_hash->{FRAMERATETEXT}				=~ s/\w*fps//;
-        return frameRate;
-    }
-
-    @Override
-    public String getAspectRatio() {
-//    $provider_hash->{ASPECTRATIOTEXT}			= $media_info->{Mediainfo}->{File}->{track}->[1]->{Display_aspect_ratio};
-        return mediaInfo.Get(MediaInfo.StreamKind.Video, 1, "DisplayAspectRatio", MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name).substring(0, 1);
-    }
-
-    @Override
-    public String getVideoResolution() {
-        String videoWidth = mediaInfo.Get(MediaInfo.StreamKind.Video, 1, "Width", MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name);
-        String videoHeight = mediaInfo.Get(MediaInfo.StreamKind.Video, 1, "Height", MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name);
-//    $provider_hash->{VIDEORESOLUTIONTEXT}	= sprintf("%sx%s",$media_info->{Mediainfo}->{File}->{track}->[1]->{Width},$media_info->{Mediainfo}->{File}->{track}->[1]->{Height});
-//    $provider_hash->{VIDEORESOLUTIONTEXT} =~ s/pixels//g;
-//    $provider_hash->{VIDEORESOLUTIONTEXT} =~ s/\s//g;
-        return String.format("%sx%s", videoWidth, videoHeight);
-    }
-
-    @Override
-    public String getVideoBitrate() {
-//    $provider_hash->{VIDEOBITRATETEXT}		= $media_info->{Mediainfo}->{File}->{track}->[1]->{Bit_rate}; 
-        return mediaInfo.Get(MediaInfo.StreamKind.Video, 1, "BitRate", MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name);
-    }
-
-    @Override
-    public String getAudioCodec() {
+    String getAudioCodec(int audioStreamNumber) {
 //    $provider_hash->{AUDIOCODECTEXT}			= $media_info->{Mediainfo}->{File}->{track}->[2]->{Codec_ID};
-        return mediaInfo.Get(MediaInfo.StreamKind.Video, 2, "BitRate", MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name);
+        return mediaInfo.Get(MediaInfo.StreamKind.Audio, audioStreamNumber, "CodecID", MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name);
     }
 
-    @Override
 //    $provider_hash->{AUDIOCHANNELSTEXT}		= $media_info->{Mediainfo}->{File}->{track}->[2]->{Channel_s_};
 //    $provider_hash->{AUDIOCHANNELSTEXT}		=~ s/(\d+) .*$/$1 /;
-    public String getAudioChannels() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    String getAudioChannels(int audioStreamNumber) {
+        return mediaInfo.Get(MediaInfo.StreamKind.Audio, audioStreamNumber, "Channel(s)", MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name);
     }
 
-    @Override
-    public String getAudioBitrate() {
+    String getAudioBitrate(int audioStreamNumber) {
 //    $provider_hash->{AUDIOBITRATETEXT}		= $media_info->{Mediainfo}->{File}->{track}->[2]->{Bit_rate};
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return mediaInfo.Get(MediaInfo.StreamKind.Audio, audioStreamNumber, "BitRate", MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name);
     }
 
-    @Override
-    public String getDuration() {
-//    $provider_hash->{DURATIONTEXT}				= $media_info->{Mediainfo}->{File}->{track}->[1]->{Duration};
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    String getLanguageCode(int audioStreamNumber) {
+        return mediaInfo.Get(MediaInfo.StreamKind.Audio, audioStreamNumber, "Language", MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name);
     }
 
-    @Override
-    public String getFileSize() {
-//    $provider_hash->{FILESIZETEXT}				= $media_info->{Mediainfo}->{File}->{track}->[0]->{File_size};
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public String getContainer() {
-//    $provider_hash->{CONTAINERTEXT}				= lc($media_info->{Mediainfo}->{File}->{track}->[0]->{Format});
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public String getLanguageCode() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public String getLanguage() {
+    String getLanguage(int audioStreamNumber) {
 //    my @al_ary=map{$_->{type} =~ /audio/i ? $_->{Language} : () } @{$media_info->{Mediainfo}->{File}->{track}};
 //    $provider_hash->{LANGUAGE}=\@al_ary;
 //    $counter=1;
@@ -349,27 +424,16 @@ public class MovieInfoImpl implements MovieInfo {
 //            $provider_hash->{"LANGUAGE$counter"}=lc($_);
 //            $counter++;
 //    };
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return mediaInfo.Get(MediaInfo.StreamKind.Audio, audioStreamNumber, "Language/String", MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name);
     }
 
     @Override
-    public List<String> getAllLanguages() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public List<String> getAllLanguageCodes() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public List<AudioInfo> getAllAudioInfo() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    private String localizeLanguage(String language) {
-        Locale langlocale = Locale.forLanguageTag(language);
-        return StringUtils.capitalize(langlocale.getDisplayLanguage(langlocale));
+    public void close() {
+        mediaInfo.Close();
+        if (mediaInfo.Get(MediaInfo.StreamKind.General, 0, "CompleteName", MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name).startsWith(System.getProperty("java.io.tmpdir"))) {
+            // delete temp file
+            mediaFile.delete();
+        }
     }
 
 }
