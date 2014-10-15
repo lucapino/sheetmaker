@@ -5,22 +5,8 @@
  */
 package com.github.lucapino.sheetmaker;
 
-import com.github.lucapino.sheetmaker.parsers.mediainfo.MediaInfo;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.vfs.FileFilter;
-import org.apache.commons.vfs.FileFilterSelector;
-import org.apache.commons.vfs.FileObject;
-import org.apache.commons.vfs.FileSelectInfo;
-import org.apache.commons.vfs.FileSelector;
-import org.apache.commons.vfs.FileSystemManager;
-import org.apache.commons.vfs.VFS;
+import com.github.lucapino.sheetmaker.parsers.MovieInfo;
+import com.github.lucapino.sheetmaker.parsers.mediainfo.MediaInfoRetriever;
 import org.testng.annotations.Test;
 
 /**
@@ -31,13 +17,16 @@ public class ImplementationTest {
 
     @Test
     public void testImplementation() throws Exception {
-        String[] languages = {"it", "fr", "es", "de"};
-        for (String language : languages) {
-            Locale langlocale = Locale.forLanguageTag(language);
-            System.out.println(language + ": " + langlocale.getDisplayLanguage(langlocale));
-        }
-        
-        
+
+        MediaInfoRetriever retriever = new MediaInfoRetriever();
+        MovieInfo info = retriever.getMovieInfo("/home/tagliani/Video/pirati.iso");
+        info.getFileSize();
+
+//        String[] languages = {"it", "fr", "es", "de"};
+//        for (String language : languages) {
+//            Locale langlocale = Locale.forLanguageTag(language);
+//            System.out.println(language + ": " + langlocale.getDisplayLanguage(langlocale));
+//        }
 //        Map<Integer, String> ifoFiles = new TreeMap<>();
 //        FileSystemManager fsManager = VFS.getManager();
 //        FileObject fo = fsManager.resolveFile("iso:/home/tagliani/Video/pirati.iso!/");
@@ -87,7 +76,6 @@ public class ImplementationTest {
 //                System.out.println(mi.Inform());
 //            }
 //        }
-
 //        FileFilter filter = new FileFilter() {
 //
 //            @Override
