@@ -49,10 +49,10 @@ public class MediaInfoRetriever implements InfoRetriever {
                     }
                 });
                 FileObject[] files = fo.getChild("VIDEO_TS").findFiles(ifoFs);
-                for (int i = 0; i < files.length; i++) {
-                    File tmpFile = new File(System.getProperty("java.io.tmpdir") + File.separator + files[i].getName().getBaseName());
-                    System.out.println(files[i].getName().getBaseName());
-                    IOUtils.copy(files[i].getContent().getInputStream(), new FileOutputStream(tmpFile));
+                for (FileObject file : files) {
+                    File tmpFile = new File(System.getProperty("java.io.tmpdir") + File.separator + file.getName().getBaseName());
+                    System.out.println(file.getName().getBaseName());
+                    IOUtils.copy(file.getContent().getInputStream(), new FileOutputStream(tmpFile));
                     mediaInfo.Open(tmpFile.getAbsolutePath());
                     String format = mediaInfo.Get(MediaInfo.StreamKind.General, 0, "Format_Profile", MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name);
                     System.out.println("Format profile: " + format);

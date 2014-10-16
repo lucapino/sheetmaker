@@ -11,9 +11,11 @@ import com.github.lucapino.sheetmaker.model.movie.Movie;
 import com.github.lucapino.sheetmaker.model.tv.Serie;
 import com.omertron.themoviedbapi.MovieDbException;
 import com.omertron.themoviedbapi.TheMovieDbApi;
-import com.omertron.themoviedbapi.model.ArtworkType;
-import com.omertron.themoviedbapi.model.MovieDb;
-import com.omertron.themoviedbapi.model.TmdbConfiguration;
+import com.omertron.themoviedbapi.methods.TmdbFind;
+import com.omertron.themoviedbapi.model.Certification;
+import com.omertron.themoviedbapi.model.Configuration;
+import com.omertron.themoviedbapi.model.movie.MovieDb;
+import com.omertron.themoviedbapi.model.type.ArtworkType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +34,9 @@ public class DataRetrieverImpl implements DataRetriever {
     public static String BACKDROP_SIZE = "original";
 
     private final TheMovieDbApi api;
-    private final TmdbConfiguration configuration;
+    private final Configuration configuration;
+    private final List<Certification> movieCertifications;
+    private final List<Certification> tvCertifications;
 
 //    public static void main(String[] args) throws Exception {
 //        DataRetrieverImpl app = new DataRetrieverImpl();
@@ -42,6 +46,8 @@ public class DataRetrieverImpl implements DataRetriever {
         // use themoviedb api to get info about movie
         api = new TheMovieDbApi(TMDB_API_KEY);
         configuration = api.getConfiguration();
+        movieCertifications = api.getMovieCertificationList().getResults().get("US");
+        tvCertifications = api.getTvCertificationList().getResults().get("US");
 //        Workbook wb = new HSSFWorkbook(new FileInputStream(new File("/home/tagliani/tmp/HD-report.xls")));
 //        Sheet sheet = wb.getSheet("HD1");
 //        int lastRow = sheet.getLastRowNum();
@@ -102,7 +108,7 @@ public class DataRetrieverImpl implements DataRetriever {
         try {
             MovieDb movieData = api.getMovieInfoImdb(imdbID, language, "alternative_titles,casts,images,keywords,releases,trailers,translations,similar_movies,reviews,lists");
             if (movieData != null) {
-                movieInfo = new MovieImpl(movieData);
+                movieInfo = new MovieImpl(movieData, movieCertifications);
             }
         } catch (MovieDbException ex) {
             // TODO: add logger
@@ -118,7 +124,7 @@ public class DataRetrieverImpl implements DataRetriever {
             List<MovieDb> movies = api.searchMovie(title, 0, language, false, 0).getResults();
             for (MovieDb movie : movies) {
                 // we need to use this api to retrieve the full info
-                results.add(new MovieImpl(api.getMovieInfo(movie.getId(), language)));
+                results.add(new MovieImpl(api.getMovieInfo(movie.getId(), language), movieCertifications));
             }
         } catch (MovieDbException ex) {
             // TODO: add logger
@@ -129,7 +135,15 @@ public class DataRetrieverImpl implements DataRetriever {
 
     @Override
     public Serie retrieveTvSerieFromImdbID(String imdbID, String language) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        // TODO: implement
+        Serie result = null;
+        try {
+            api.findTvFromExternalId(imdbID, TmdbFind.ExternalSource.imdb_id, language);
+        } catch (MovieDbException ex) {
+            // TODO: add logger
+            ex.printStackTrace();
+        }
+        return result;
     }
 
     @Override

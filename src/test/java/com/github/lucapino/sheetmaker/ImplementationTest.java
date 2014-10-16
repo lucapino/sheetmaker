@@ -5,8 +5,14 @@
  */
 package com.github.lucapino.sheetmaker;
 
-import com.github.lucapino.sheetmaker.parsers.MovieInfo;
-import com.github.lucapino.sheetmaker.parsers.mediainfo.MediaInfoRetriever;
+import com.omertron.themoviedbapi.TheMovieDbApi;
+import com.omertron.themoviedbapi.methods.TmdbFind;
+import com.omertron.themoviedbapi.model.tv.TVEpisode;
+import com.omertron.themoviedbapi.model.tv.TVEpisodeBasic;
+import com.omertron.themoviedbapi.model.tv.TVSeason;
+import com.omertron.themoviedbapi.model.tv.TVSeasonBasic;
+import com.omertron.themoviedbapi.model.tv.TVSeries;
+import java.util.List;
 import org.testng.annotations.Test;
 
 /**
@@ -18,10 +24,45 @@ public class ImplementationTest {
     @Test
     public void testImplementation() throws Exception {
 
-        MediaInfoRetriever retriever = new MediaInfoRetriever();
-        MovieInfo info = retriever.getMovieInfo("/home/tagliani/Video/pirati.iso");
-        info.getFileSize();
+        TheMovieDbApi api = new TheMovieDbApi(System.getProperty("tmdb.api.key"));
+        List<TVSeries> series = api.findTvFromExternalId("tt1219024", TmdbFind.ExternalSource.imdb_id, "it");
+        int id = series.get(0).getId();
+        TVSeries serie = api.getTv(id, "it", "images");
+        System.out.println("Serie: " + serie.getName());
 
+        TVSeason season = api.getTvSeason(id, 1, "it");// , "images");
+        System.out.println("Season: " + season.getSeasonNumber());
+        for (TVEpisodeBasic basicEpisode : season.getEpisodes()) {
+            TVEpisode episode = api.getTvEpisode(id, season.getSeasonNumber(), basicEpisode.getEpisodeNumber(), "it");//, "images");
+            System.out.println("\tEpisode " + episode.getEpisodeNumber()+ " : " + episode.getName());
+            System.out.println("\t\tPlot: " + episode.getOverview().trim());
+        }
+
+//        TmdbResultsMap<String, List<Certification>> tvResults = api.getTvCertificationList();
+//        TmdbResultsMap<String, List<Certification>> movieResults = api.getMovieCertificationList();
+//        System.out.println("----------------- MOVIES --------------------");
+//        Set<String> countries = movieResults.getResults().keySet();
+//        for (String country : countries) {
+//            System.out.println("Country: " + country);
+//            List<Certification> certifications = movieResults.getResults().get(country);
+//            for (Certification certification : certifications) {
+//                System.out.println("\tCertification: " + certification.getCertification());
+//                System.out.println("\tMeaning      : " + certification.getMeaning());
+//            }
+//        }
+//        System.out.println("----------------- TV --------------------");
+//        countries = tvResults.getResults().keySet();
+//        for (String country : countries) {
+//            System.out.println("Country: " + country);
+//            List<Certification> certifications = tvResults.getResults().get(country);
+//            for (Certification certification : certifications) {
+//                System.out.println("\tCertification: " + certification.getCertification());
+//                System.out.println("\tMeaning      : " + certification.getMeaning());
+//            }
+//        }
+//        MediaInfoRetriever retriever = new MediaInfoRetriever();
+//        MovieInfo info = retriever.getMovieInfo("/home/tagliani/Video/pirati.iso");
+//        info.getFileSize();
 //        String[] languages = {"it", "fr", "es", "de"};
 //        for (String language : languages) {
 //            Locale langlocale = Locale.forLanguageTag(language);

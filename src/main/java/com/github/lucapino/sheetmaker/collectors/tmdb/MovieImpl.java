@@ -6,12 +6,14 @@
 package com.github.lucapino.sheetmaker.collectors.tmdb;
 
 import com.github.lucapino.sheetmaker.model.movie.Movie;
+import com.omertron.themoviedbapi.model.Certification;
 import com.omertron.themoviedbapi.model.Genre;
-import com.omertron.themoviedbapi.model.MovieDb;
-import com.omertron.themoviedbapi.model.PersonCast;
-import com.omertron.themoviedbapi.model.PersonCrew;
 import com.omertron.themoviedbapi.model.ProductionCompany;
 import com.omertron.themoviedbapi.model.ProductionCountry;
+import com.omertron.themoviedbapi.model.ReleaseInfo;
+import com.omertron.themoviedbapi.model.movie.MovieDb;
+import com.omertron.themoviedbapi.model.person.PersonCast;
+import com.omertron.themoviedbapi.model.person.PersonCrew;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,9 +24,11 @@ import java.util.List;
 public class MovieImpl implements Movie {
 
     private final MovieDb movieData;
+    private final List<Certification> certificationList;
 
-    public MovieImpl(MovieDb movieData) {
+    public MovieImpl(MovieDb movieData, List<Certification> certificationList) {
         this.movieData = movieData;
+        this.certificationList = certificationList;
     }
 
     @Override
@@ -96,12 +100,25 @@ public class MovieImpl implements Movie {
 
     @Override
     public String getCertification() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        // retrieve release in USA and get certification
+        List<ReleaseInfo> releases = movieData.getReleases();
+        for (ReleaseInfo release : releases) {
+            if (release.getCountry().equals("US")) {
+                return release.getCertification();
+            }
+        }
+        return "";
     }
 
     @Override
     public String getMPAA() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String certificationCode = getCertification();
+        for (Certification certification : certificationList) {
+            if (certification.getCertification().equals(certificationCode)) {
+                return certification.getMeaning();
+            }
+        }
+        return "";
     }
 
     @Override

@@ -94,8 +94,9 @@
         <dependency>
             <groupId>com.omertron</groupId>
             <artifactId>themoviedbapi</artifactId>
-            <version>3.9</version>
+            <version>4.0-SNAPSHOT</version>
         </dependency>
+        
         <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-json-jackson</artifactId>
@@ -172,5 +173,10 @@
             <artifactId>iso9660-vfs-impl</artifactId>
             <version>2.0.0</version>
         </dependency>
+<!--        <dependency>
+            <groupId>info.movito</groupId>
+            <artifactId>themoviedbapi</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>-->
     </dependencies>
 </project>
