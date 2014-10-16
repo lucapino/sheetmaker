@@ -13,6 +13,8 @@ import java.util.List;
  */
 public interface Season {
 
+    int getId();
+    
     Serie getSerie();
     
     String getName();
@@ -21,7 +23,7 @@ public interface Season {
 
     List<Episode> getEpisodes();
 
-    int getEpisodeNumber();
+    int getEpisodesNumber();
 
     List<String> getEpisodeTitles();
 
@@ -30,10 +32,6 @@ public interface Season {
     Episode getEpisode(String episodeTitle);
     
     String getOverview();
-
-    List<String> getActors();
-    
-    List<String> getDirectors();
 
     // TODO: add images
 }

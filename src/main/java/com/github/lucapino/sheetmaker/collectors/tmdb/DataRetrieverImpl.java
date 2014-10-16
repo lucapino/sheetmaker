@@ -15,6 +15,7 @@ import com.omertron.themoviedbapi.methods.TmdbFind;
 import com.omertron.themoviedbapi.model.Certification;
 import com.omertron.themoviedbapi.model.Configuration;
 import com.omertron.themoviedbapi.model.movie.MovieDb;
+import com.omertron.themoviedbapi.model.tv.TVSeries;
 import com.omertron.themoviedbapi.model.type.ArtworkType;
 import java.util.ArrayList;
 import java.util.List;
@@ -135,10 +136,13 @@ public class DataRetrieverImpl implements DataRetriever {
 
     @Override
     public Serie retrieveTvSerieFromImdbID(String imdbID, String language) {
-        // TODO: implement
         Serie result = null;
         try {
-            api.findTvFromExternalId(imdbID, TmdbFind.ExternalSource.imdb_id, language);
+            List<TVSeries> series = api.findTvSeriesFromExternalId(imdbID, TmdbFind.ExternalSource.imdb_id, language);
+            // let's suppose that we have found only one
+            int id = series.get(0).getId();
+            TVSeries serie = api.getTv(id, "it", "images");
+            result = new SerieImpl(serie, api);
         } catch (MovieDbException ex) {
             // TODO: add logger
             ex.printStackTrace();

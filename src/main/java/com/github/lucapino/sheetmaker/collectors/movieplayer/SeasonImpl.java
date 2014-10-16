@@ -37,7 +37,7 @@ public class SeasonImpl implements Season {
     }
 
     @Override
-    public int getEpisodeNumber() {
+    public int getEpisodesNumber() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -62,12 +62,7 @@ public class SeasonImpl implements Season {
     }
 
     @Override
-    public List<String> getActors() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public List<String> getDirectors() {
+    public int getId() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

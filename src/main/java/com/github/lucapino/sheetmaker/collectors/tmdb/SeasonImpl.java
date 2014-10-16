@@ -8,6 +8,9 @@ package com.github.lucapino.sheetmaker.collectors.tmdb;
 import com.github.lucapino.sheetmaker.model.tv.Episode;
 import com.github.lucapino.sheetmaker.model.tv.Season;
 import com.github.lucapino.sheetmaker.model.tv.Serie;
+import com.omertron.themoviedbapi.MovieDbException;
+import com.omertron.themoviedbapi.TheMovieDbApi;
+import com.omertron.themoviedbapi.model.tv.TVSeason;
 import java.util.List;
 
 /**
@@ -16,19 +19,29 @@ import java.util.List;
  */
 public class SeasonImpl implements Season {
 
+    private final TVSeason season;
+    private final TheMovieDbApi api;
+    private final Serie serie;
+
+    public SeasonImpl(TVSeason season, Serie serie, TheMovieDbApi api) {
+        this.season = season;
+        this.api = api;
+        this.serie = serie;
+    }
+
     @Override
     public Serie getSerie() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return serie;
     }
 
     @Override
     public String getName() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return season.getName();
     }
 
     @Override
     public int getNumber() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return season.getSeasonNumber();
     }
 
     @Override
@@ -37,8 +50,8 @@ public class SeasonImpl implements Season {
     }
 
     @Override
-    public int getEpisodeNumber() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public int getEpisodesNumber() {
+        return season.getEpisodes().size();
     }
 
     @Override
@@ -48,7 +61,14 @@ public class SeasonImpl implements Season {
 
     @Override
     public Episode getEpisode(int number) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Episode episode = null;
+        try {
+            episode = new EpisodeImpl(api.getTvEpisode(serie.getId(), season.getSeasonNumber(), number, null), this, api);
+        } catch (MovieDbException ex) {
+            // TODO: add logger
+            ex.printStackTrace();
+        }
+        return episode;
     }
 
     @Override
@@ -62,13 +82,8 @@ public class SeasonImpl implements Season {
     }
 
     @Override
-    public List<String> getActors() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public List<String> getDirectors() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public int getId() {
+        return season.getId();
     }
 
 }

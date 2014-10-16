@@ -6,12 +6,10 @@
 package com.github.lucapino.sheetmaker;
 
 import com.omertron.themoviedbapi.TheMovieDbApi;
-import com.omertron.themoviedbapi.methods.TmdbFind;
-import com.omertron.themoviedbapi.model.tv.TVEpisode;
-import com.omertron.themoviedbapi.model.tv.TVEpisodeBasic;
-import com.omertron.themoviedbapi.model.tv.TVSeason;
-import com.omertron.themoviedbapi.model.tv.TVSeasonBasic;
-import com.omertron.themoviedbapi.model.tv.TVSeries;
+import com.omertron.themoviedbapi.model.movie.MovieDb;
+import com.omertron.themoviedbapi.model.person.PersonCrew;
+import com.omertron.themoviedbapi.model.person.PersonMovieOld;
+import com.omertron.themoviedbapi.results.TmdbResultsList;
 import java.util.List;
 import org.testng.annotations.Test;
 
@@ -25,19 +23,26 @@ public class ImplementationTest {
     public void testImplementation() throws Exception {
 
         TheMovieDbApi api = new TheMovieDbApi(System.getProperty("tmdb.api.key"));
-        List<TVSeries> series = api.findTvFromExternalId("tt1219024", TmdbFind.ExternalSource.imdb_id, "it");
-        int id = series.get(0).getId();
-        TVSeries serie = api.getTv(id, "it", "images");
-        System.out.println("Serie: " + serie.getName());
+        TmdbResultsList<PersonMovieOld> credits = api.getMovieCredits(156022);
 
-        TVSeason season = api.getTvSeason(id, 1, "it");// , "images");
-        System.out.println("Season: " + season.getSeasonNumber());
-        for (TVEpisodeBasic basicEpisode : season.getEpisodes()) {
-            TVEpisode episode = api.getTvEpisode(id, season.getSeasonNumber(), basicEpisode.getEpisodeNumber(), "it");//, "images");
-            System.out.println("\tEpisode " + episode.getEpisodeNumber()+ " : " + episode.getName());
-            System.out.println("\t\tPlot: " + episode.getOverview().trim());
+        List<PersonMovieOld> persons = credits.getResults();
+        for (PersonMovieOld person : persons) {
+            System.out.println(person.getDepartment() + " " + person.getJob() + " " + person.toString());
         }
 
+//        TheMovieDbApi api = new TheMovieDbApi(System.getProperty("tmdb.api.key"));
+//        List<TVSeries> series = api.findTvSeriesFromExternalId("tt1219024", TmdbFind.ExternalSource.imdb_id, "it");
+//        int id = series.get(0).getId();
+//        TVSeries serie = api.getTv(id, "it", "images");
+//        System.out.println("Serie: " + serie.getName());
+//
+//        TVSeason season = api.getTvSeason(id, 1, "it");// , "images");
+//        System.out.println("Season: " + season.getSeasonNumber());
+//        for (TVEpisodeBasic basicEpisode : season.getEpisodes()) {
+//            TVEpisode episode = api.getTvEpisode(id, season.getSeasonNumber(), basicEpisode.getEpisodeNumber(), "it");//, "images");
+//            System.out.println("\tEpisode " + episode.getEpisodeNumber()+ " : " + episode.getName());
+//            System.out.println("\t\tPlot: " + episode.getOverview().trim());
+//        }
 //        TmdbResultsMap<String, List<Certification>> tvResults = api.getTvCertificationList();
 //        TmdbResultsMap<String, List<Certification>> movieResults = api.getMovieCertificationList();
 //        System.out.println("----------------- MOVIES --------------------");
