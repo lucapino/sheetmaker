@@ -5,6 +5,7 @@
  */
 package com.github.lucapino.sheetmaker.model.tv;
 
+import com.github.lucapino.sheetmaker.model.Artwork;
 import java.util.List;
 
 /**
@@ -29,5 +30,8 @@ public interface Episode {
     
     List<String> getGuestStars();
 
-    // TODO: add images
+    // images
+    
+    Artwork getEpisodeArtwork();
+    
 }

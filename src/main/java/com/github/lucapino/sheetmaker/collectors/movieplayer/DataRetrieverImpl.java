@@ -97,47 +97,4 @@ public class DataRetrieverImpl implements DataRetriever {
     public List<Serie> retrieveTvSerieFromName(String name, String language) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
-    @Override
-    public List<Artwork> getPosters(String imdbID) {
-        return getImages(imdbID, "poster");
-    }
-
-    @Override
-    public List<Artwork> getBackdrops(String imdbID) {
-        return getImages(imdbID, "wallpaper");
-    }
-
-    private List<Artwork> fillArtwork(Movieplayer movieData, String artworkType) {
-        List<Artwork> artworks = new ArrayList<>();
-        Images images = movieData.getImages();
-        switch (artworkType) {
-            case "poster":
-                for (Poster_ poster : images.getPoster()) {
-                    artworks.add(new PosterArtworkImpl(poster));
-                }
-                break;
-            case "backdrop":
-                for (Wallpaper wallpaper : images.getWallpaper()) {
-                    artworks.add(new BackdropArtworkImpl(wallpaper));
-                }
-                break;
-        }
-
-        return artworks;
-    }
-
-    private List<Artwork> getImages(String imdbID, String artworkType) {
-        List<Artwork> result = new ArrayList<>();
-        Movieplayer movieData = target.path("movie/" + imdbID)
-                .queryParam("api_key", MP_API_KEY)
-                .queryParam("type", artworkType)
-                .request(MediaType.APPLICATION_JSON_TYPE)
-                .get(Movieplayer.class);
-        if (movieData != null) {
-            result = fillArtwork(movieData, artworkType);
-        }
-        return result;
-    }
-
 }

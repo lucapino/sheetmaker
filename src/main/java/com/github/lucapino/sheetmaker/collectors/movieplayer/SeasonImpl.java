@@ -5,6 +5,7 @@
  */
 package com.github.lucapino.sheetmaker.collectors.movieplayer;
 
+import com.github.lucapino.sheetmaker.model.Artwork;
 import com.github.lucapino.sheetmaker.model.tv.Episode;
 import com.github.lucapino.sheetmaker.model.tv.Season;
 import com.github.lucapino.sheetmaker.model.tv.Serie;
@@ -63,6 +64,16 @@ public class SeasonImpl implements Season {
 
     @Override
     public int getId() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<Artwork> getPosters() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<Artwork> getBackdrops() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

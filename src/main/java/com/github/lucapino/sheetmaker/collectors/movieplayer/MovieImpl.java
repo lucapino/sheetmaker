@@ -5,6 +5,7 @@
  */
 package com.github.lucapino.sheetmaker.collectors.movieplayer;
 
+import com.github.lucapino.sheetmaker.model.Artwork;
 import com.github.lucapino.sheetmaker.model.movie.Movie;
 import it.movieplayer.Movieplayer;
 import java.util.List;
@@ -99,6 +100,16 @@ public class MovieImpl implements Movie {
 
     @Override
     public String getRuntime() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<Artwork> getPosters() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<Artwork> getBackdrops() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

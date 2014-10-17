@@ -9,7 +9,11 @@ import com.github.lucapino.sheetmaker.collectors.DataRetriever;
 import com.github.lucapino.sheetmaker.collectors.tmdb.DataRetrieverImpl;
 import com.github.lucapino.sheetmaker.model.Artwork;
 import com.github.lucapino.sheetmaker.model.movie.Movie;
-import com.github.lucapino.sheetmaker.renderer.MovieTemplateRenderer;
+import com.github.lucapino.sheetmaker.parsers.InfoRetriever;
+import com.github.lucapino.sheetmaker.parsers.MovieInfo;
+import com.github.lucapino.sheetmaker.parsers.mediainfo.MediaInfoRetriever;
+import com.github.lucapino.sheetmaker.renderer.TemplateFilter;
+import com.github.lucapino.sheetmaker.renderer.TemplateRenderer;
 import com.github.lucapino.sheetmaker.utils.ScreenImage;
 import java.awt.AlphaComposite;
 import java.awt.Color;
@@ -23,6 +27,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.net.URL;
 import java.util.List;
+import java.util.Map;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -200,12 +205,16 @@ public class PreviewJFrame extends JFrame {
                     String fanart3Path = tmpFolder.getAbsolutePath() + "/fanart3.jpg";
 
                     PreviewJFrame frame = new PreviewJFrame();
+                    logger.info("Creating parser...");
+                    InfoRetriever parser = new MediaInfoRetriever();
+                    MovieInfo movieInfo = parser.getMovieInfo("/media/Elements/Film/JackRyan.mkv");
+                    logger.info("Retrieving movie file info...");
                     logger.info("Creating dataretriever...");
                     DataRetriever retriever = new DataRetrieverImpl();
                     logger.info("Retrieving movie data...");
-                    Movie movie = retriever.retrieveMovieFromImdbID("tt0196229", "IT");
+                    Movie movie = retriever.retrieveMovieFromImdbID("tt1205537", "IT");
                     logger.info("Retrieving backdrops and fanart...");
-                    List<Artwork> images = retriever.getBackdrops("tt0196229");
+                    List<Artwork> images = movie.getBackdrops();
                     // background
                     logger.info("Saving backdrop...");
                     IOUtils.copyLarge(new URL(images.get(0).getImageURL()).openStream(), new FileOutputStream(backdropPath));
@@ -219,16 +228,19 @@ public class PreviewJFrame extends JFrame {
                     }
                     // cover
                     logger.info("Retrieving cover...");
-                    Artwork cover = retriever.getPosters("tt0196229").get(0);
+                    Artwork cover = movie.getPosters().get(0);
                     String imageURL = cover.getImageURL();
                     logger.info("Saving cover...");
                     IOUtils.copyLarge(new URL(imageURL).openStream(), new FileOutputStream(coverPath));
+                    
+                    Map<String, String> tokenMap = TemplateFilter.createTokenMap(movie, movieInfo, null);
+                    
                     logger.info("Creating renderer...");
-                    MovieTemplateRenderer renderer = new MovieTemplateRenderer(movie, backdropPath, fanart1Path, fanart2Path, fanart3Path, coverPath);
-                    JPanel imagePanel= null;
+                    TemplateRenderer renderer = new TemplateRenderer();
+                    JPanel imagePanel = null;
                     try {
                         logger.info("Rendering image...");
-                        imagePanel = renderer.renderTemplate(this.getClass().getResource("/templates/default/Template.xml"));
+                        imagePanel = renderer.renderTemplate(this.getClass().getResource("/templates/simplicity/template.xml"), tokenMap, backdropPath, fanart1Path, fanart2Path, fanart3Path, coverPath);
                         logger.info("Adding image to frame...");
                         frame.add(imagePanel);
 

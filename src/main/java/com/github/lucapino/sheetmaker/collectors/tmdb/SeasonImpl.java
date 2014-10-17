@@ -5,12 +5,16 @@
  */
 package com.github.lucapino.sheetmaker.collectors.tmdb;
 
+import static com.github.lucapino.sheetmaker.collectors.tmdb.DataRetrieverImpl.CONFIGURATION;
+import com.github.lucapino.sheetmaker.model.Artwork;
 import com.github.lucapino.sheetmaker.model.tv.Episode;
 import com.github.lucapino.sheetmaker.model.tv.Season;
 import com.github.lucapino.sheetmaker.model.tv.Serie;
 import com.omertron.themoviedbapi.MovieDbException;
 import com.omertron.themoviedbapi.TheMovieDbApi;
 import com.omertron.themoviedbapi.model.tv.TVSeason;
+import com.omertron.themoviedbapi.model.type.ArtworkType;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -84,6 +88,41 @@ public class SeasonImpl implements Season {
     @Override
     public int getId() {
         return season.getId();
+    }
+
+    @Override
+    public List<Artwork> getPosters() {
+        return getArtworks(getId(), ArtworkType.POSTER);
+    }
+
+    @Override
+    public List<Artwork> getBackdrops() {
+        return getArtworks(getId(), ArtworkType.BACKDROP);
+    }
+
+    private List<Artwork> getArtworks(int id, ArtworkType artworkType) {
+        List<Artwork> artworks = new ArrayList<>();
+        try {
+            List<com.omertron.themoviedbapi.model.Artwork> tmdbArtworks = api.getTvSeasonImages(serie.getId(), season.getSeasonNumber(), null).getResults();
+            if (tmdbArtworks != null) {
+                for (com.omertron.themoviedbapi.model.Artwork image : tmdbArtworks) {
+                    if (image.getArtworkType() == artworkType) {
+                        switch (artworkType) {
+                            case POSTER:
+                                artworks.add(new PosterArtworkImpl(CONFIGURATION.getBaseUrl(), image));
+                                break;
+                            case BACKDROP:
+                                artworks.add(new BackdropArtworkImpl(CONFIGURATION.getBaseUrl(), image));
+                                break;
+                        }
+                    }
+                }
+            }
+        } catch (MovieDbException ex) {
+            // TODO: add logger
+            ex.printStackTrace();
+        }
+        return artworks;
     }
 
 }

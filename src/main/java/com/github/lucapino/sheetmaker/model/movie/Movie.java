@@ -5,6 +5,7 @@
  */
 package com.github.lucapino.sheetmaker.model.movie;
 
+import com.github.lucapino.sheetmaker.model.Artwork;
 import java.util.List;
 
 /**
@@ -61,4 +62,9 @@ public interface Movie {
     // 134
     String getRuntime();
 
+    // images
+    
+    List<Artwork> getPosters();
+    
+    List<Artwork> getBackdrops();
 }

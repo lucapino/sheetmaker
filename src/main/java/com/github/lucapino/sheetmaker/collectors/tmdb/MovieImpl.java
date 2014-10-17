@@ -5,7 +5,11 @@
  */
 package com.github.lucapino.sheetmaker.collectors.tmdb;
 
+import static com.github.lucapino.sheetmaker.collectors.tmdb.DataRetrieverImpl.CONFIGURATION;
+import com.github.lucapino.sheetmaker.model.Artwork;
 import com.github.lucapino.sheetmaker.model.movie.Movie;
+import com.omertron.themoviedbapi.MovieDbException;
+import com.omertron.themoviedbapi.TheMovieDbApi;
 import com.omertron.themoviedbapi.model.Certification;
 import com.omertron.themoviedbapi.model.Genre;
 import com.omertron.themoviedbapi.model.ProductionCompany;
@@ -14,6 +18,7 @@ import com.omertron.themoviedbapi.model.ReleaseInfo;
 import com.omertron.themoviedbapi.model.movie.MovieDb;
 import com.omertron.themoviedbapi.model.person.PersonCast;
 import com.omertron.themoviedbapi.model.person.PersonCrew;
+import com.omertron.themoviedbapi.model.type.ArtworkType;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,10 +30,12 @@ public class MovieImpl implements Movie {
 
     private final MovieDb movieData;
     private final List<Certification> certificationList;
+    private final TheMovieDbApi api;
 
-    public MovieImpl(MovieDb movieData, List<Certification> certificationList) {
+    public MovieImpl(MovieDb movieData, List<Certification> certificationList, TheMovieDbApi api) {
         this.movieData = movieData;
         this.certificationList = certificationList;
+        this.api = api;
     }
 
     @Override
@@ -147,5 +154,40 @@ public class MovieImpl implements Movie {
     @Override
     public String getRuntime() {
         return "" + movieData.getRuntime();
+    }
+    
+    @Override
+    public List<Artwork> getPosters() {
+        return getArtworks(getImdbId(), ArtworkType.POSTER);
+    }
+
+    @Override
+    public List<Artwork> getBackdrops() {
+        return getArtworks(getImdbId(), ArtworkType.BACKDROP);
+    }
+
+    private List<Artwork> getArtworks(String imdbID, ArtworkType artworkType) {
+        List<Artwork> artworks = new ArrayList<>();
+        try {
+            MovieDb movie = api.getMovieInfoImdb(imdbID, null, "images");
+            if (movie != null) {
+                for (com.omertron.themoviedbapi.model.Artwork image : movie.getImages()) {
+                    if (image.getArtworkType() == artworkType) {
+                        switch (artworkType) {
+                            case POSTER:
+                                artworks.add(new PosterArtworkImpl(CONFIGURATION.getBaseUrl(), image));
+                                break;
+                            case BACKDROP:
+                                artworks.add(new BackdropArtworkImpl(CONFIGURATION.getBaseUrl(), image));
+                                break;
+                        }
+                    }
+                }
+            }
+        } catch (MovieDbException ex) {
+            // TODO: add logger
+            ex.printStackTrace();
+        }
+        return artworks;
     }
 }

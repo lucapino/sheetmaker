@@ -9,8 +9,10 @@ import com.github.lucapino.sheetmaker.parsers.AudioInfo;
 import com.github.lucapino.sheetmaker.parsers.MovieInfo;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -69,35 +71,52 @@ public class MovieInfoImpl implements MovieInfo {
 //    $provider_hash->{EXTERNALSUBTITLESTEXT}		= '';
     @Override
     public List<String> getAllSubtitles() {
-        List<String> result = new ArrayList<>();
+        Set<String> result = new HashSet<>();
         result.addAll(getEmbeddedSubtitles());
         result.addAll(getExternalSubtitles());
-        return result;
+        return new ArrayList(result);
     }
 
     @Override
     public List<String> getAllLocalizedSubtitles() {
-        List<String> subtitles = new ArrayList<>();
+        Set<String> subtitles = new HashSet<>();
         int number = mediaInfo.Count_Get(MediaInfo.StreamKind.Text);
         for (int i = 0; i < number; i++) {
             String countryCode = mediaInfo.Get(MediaInfo.StreamKind.Text, i, "Language", MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name);
             subtitles.add(localizeLanguage(countryCode));
         }
-        return subtitles;
+        return new ArrayList(subtitles);
+    }
+
+    @Override
+    public List<String> getEmbeddedLocalizedSubtitles() {
+        Set<String> subtitles = new HashSet<>();
+        int number = mediaInfo.Count_Get(MediaInfo.StreamKind.Text);
+        for (int i = 0; i < number; i++) {
+            String countryCode = mediaInfo.Get(MediaInfo.StreamKind.Text, i, "Language", MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name);
+            subtitles.add(localizeLanguage(countryCode));
+        }
+        return new ArrayList(subtitles);
     }
 
     @Override
     public List<String> getEmbeddedSubtitles() {
-        List<String> subtitles = new ArrayList<>();
+        Set<String> subtitles = new HashSet<>();
         int number = mediaInfo.Count_Get(MediaInfo.StreamKind.Text);
         for (int i = 0; i < number; i++) {
             subtitles.add(mediaInfo.Get(MediaInfo.StreamKind.Text, i, "Language/String", MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name));
         }
-        return subtitles;
+        return new ArrayList(subtitles);
     }
 
     @Override
     public List<String> getExternalSubtitles() {
+        // TODO: implement scan of files alongside movie file
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<String> getExternalLocalizedSubtitles() {
         // TODO: implement scan of files alongside movie file
         return new ArrayList<>();
     }
@@ -193,7 +212,7 @@ public class MovieInfoImpl implements MovieInfo {
     @Override
     public String getAspectRatio() {
 //    $provider_hash->{ASPECTRATIOTEXT}			= $media_info->{Mediainfo}->{File}->{track}->[1]->{Display_aspect_ratio};
-        return mediaInfo.Get(MediaInfo.StreamKind.Video, 0, "DisplayAspectRatio", MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name).substring(0, 1);
+        return mediaInfo.Get(MediaInfo.StreamKind.Video, 0, "DisplayAspectRatio", MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name);
     }
 
     @Override

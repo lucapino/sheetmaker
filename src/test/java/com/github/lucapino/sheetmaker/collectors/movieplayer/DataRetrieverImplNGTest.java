@@ -125,35 +125,35 @@ public class DataRetrieverImplNGTest {
         fail("The test case is a prototype.");
     }
 
-    /**
-     * Test of getPosters method, of class DataRetrieverImpl.
-     */
-    @Test(enabled = true)
-    public void testGetPosters() {
-        System.out.println("getPosters");
-        String imdbID = "tt0268380";
-        List<Artwork> result = instance.getPosters(imdbID);
-        for (Artwork artwork : result) {
-            System.out.println("Type : " + artwork.getType());
-            System.out.println("Thumb: " + artwork.getThumbURL());
-            System.out.println("Image: " + artwork.getImageURL());
-        }
-        
-    }
-
-    /**
-     * Test of getBackdrops method, of class DataRetrieverImpl.
-     */
-    @Test(enabled = true)
-    public void testGetBackdrops() {
-        System.out.println("getBackdrops");
-        String imdbID = "tt0268380";
-        List<Artwork> result = instance.getBackdrops(imdbID);
-        for (Artwork artwork : result) {
-            System.out.println("Type : " + artwork.getType());
-            System.out.println("Thumb: " + artwork.getThumbURL());
-            System.out.println("Image: " + artwork.getImageURL());
-        }
-    }
+//    /**
+//     * Test of getPosters method, of class DataRetrieverImpl.
+//     */
+//    @Test(enabled = true)
+//    public void testGetPosters() {
+//        System.out.println("getPosters");
+//        String imdbID = "tt0268380";
+//        List<Artwork> result = instance.getPosters(imdbID);
+//        for (Artwork artwork : result) {
+//            System.out.println("Type : " + artwork.getType());
+//            System.out.println("Thumb: " + artwork.getThumbURL());
+//            System.out.println("Image: " + artwork.getImageURL());
+//        }
+//        
+//    }
+//
+//    /**
+//     * Test of getBackdrops method, of class DataRetrieverImpl.
+//     */
+//    @Test(enabled = true)
+//    public void testGetBackdrops() {
+//        System.out.println("getBackdrops");
+//        String imdbID = "tt0268380";
+//        List<Artwork> result = instance.getBackdrops(imdbID);
+//        for (Artwork artwork : result) {
+//            System.out.println("Type : " + artwork.getType());
+//            System.out.println("Thumb: " + artwork.getThumbURL());
+//            System.out.println("Image: " + artwork.getImageURL());
+//        }
+//    }
 
 }

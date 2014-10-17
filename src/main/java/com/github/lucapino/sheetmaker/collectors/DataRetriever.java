@@ -35,10 +35,6 @@ public interface DataRetriever {
     // retrieve from name
     List<Serie> retrieveTvSerieFromName(String name, String language);
     
-    // images
     
-    List<Artwork> getPosters(String imdbID);
-    
-    List<Artwork> getBackdrops(String imdbID);
 
 }

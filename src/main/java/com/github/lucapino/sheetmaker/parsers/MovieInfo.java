@@ -37,8 +37,14 @@ public interface MovieInfo {
     // [Italian, English]
     List<String> getEmbeddedSubtitles();
     
+    // [Italiano, English]
+    List<String> getEmbeddedLocalizedSubtitles();
+    
     // [French, Spanish, German]
     List<String> getExternalSubtitles();
+    
+    // [Français, Español, Deutsch]
+    List<String> getExternalLocalizedSubtitles();
 
     // MKV
     String getMediaformat();

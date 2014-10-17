@@ -15,17 +15,22 @@ import com.github.lucapino.sheetmaker.model.Artwork;
  */
 class PosterArtworkImpl implements Artwork {
 
-    private com.omertron.themoviedbapi.model.Artwork image;
+    private String imagePath;
     private String baseURL;
     
     public PosterArtworkImpl(String baseURL, com.omertron.themoviedbapi.model.Artwork image) {
-        this.image = image;
+        this.imagePath = image.getFilePath();
+        this.baseURL = baseURL;
+    }
+    
+    public PosterArtworkImpl(String baseURL, String imagePath) {
+        this.imagePath = imagePath;
         this.baseURL = baseURL;
     }
 
     @Override
     public String getImageURL() {
-        return baseURL + POSTER_SIZE + image.getFilePath();
+        return baseURL + POSTER_SIZE + imagePath;
     }
 
     @Override
@@ -35,7 +40,7 @@ class PosterArtworkImpl implements Artwork {
 
     @Override
     public String getThumbURL() {
-        return baseURL + POSTER_THUMB_SIZE + image.getFilePath();
+        return baseURL + POSTER_THUMB_SIZE + imagePath;
     }
     
     

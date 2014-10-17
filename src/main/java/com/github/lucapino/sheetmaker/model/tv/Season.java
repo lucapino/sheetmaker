@@ -5,6 +5,7 @@
  */
 package com.github.lucapino.sheetmaker.model.tv;
 
+import com.github.lucapino.sheetmaker.model.Artwork;
 import java.util.List;
 
 /**
@@ -33,5 +34,9 @@ public interface Season {
     
     String getOverview();
 
-    // TODO: add images
+    // images
+    
+    List<Artwork> getPosters();
+    
+    List<Artwork> getBackdrops();
 }

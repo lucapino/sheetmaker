@@ -6,7 +6,6 @@
 package com.github.lucapino.sheetmaker.collectors.tmdb;
 
 import com.github.lucapino.sheetmaker.collectors.DataRetriever;
-import com.github.lucapino.sheetmaker.model.Artwork;
 import com.github.lucapino.sheetmaker.model.movie.Movie;
 import com.github.lucapino.sheetmaker.model.tv.Serie;
 import com.omertron.themoviedbapi.MovieDbException;
@@ -16,7 +15,7 @@ import com.omertron.themoviedbapi.model.Certification;
 import com.omertron.themoviedbapi.model.Configuration;
 import com.omertron.themoviedbapi.model.movie.MovieDb;
 import com.omertron.themoviedbapi.model.tv.TVSeries;
-import com.omertron.themoviedbapi.model.type.ArtworkType;
+import com.omertron.themoviedbapi.model.tv.TVSeriesBasic;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +34,7 @@ public class DataRetrieverImpl implements DataRetriever {
     public static String BACKDROP_SIZE = "original";
 
     private final TheMovieDbApi api;
-    private final Configuration configuration;
+    public static Configuration CONFIGURATION;
     private final List<Certification> movieCertifications;
     private final List<Certification> tvCertifications;
 
@@ -46,7 +45,7 @@ public class DataRetrieverImpl implements DataRetriever {
     public DataRetrieverImpl() throws Exception {
         // use themoviedb api to get info about movie
         api = new TheMovieDbApi(TMDB_API_KEY);
-        configuration = api.getConfiguration();
+        CONFIGURATION = api.getConfiguration();
         movieCertifications = api.getMovieCertificationList().getResults().get("US");
         tvCertifications = api.getTvCertificationList().getResults().get("US");
 //        Workbook wb = new HSSFWorkbook(new FileInputStream(new File("/home/tagliani/tmp/HD-report.xls")));
@@ -109,7 +108,7 @@ public class DataRetrieverImpl implements DataRetriever {
         try {
             MovieDb movieData = api.getMovieInfoImdb(imdbID, language, "alternative_titles,casts,images,keywords,releases,trailers,translations,similar_movies,reviews,lists");
             if (movieData != null) {
-                movieInfo = new MovieImpl(movieData, movieCertifications);
+                movieInfo = new MovieImpl(movieData, movieCertifications, api);
             }
         } catch (MovieDbException ex) {
             // TODO: add logger
@@ -125,7 +124,7 @@ public class DataRetrieverImpl implements DataRetriever {
             List<MovieDb> movies = api.searchMovie(title, 0, language, false, 0).getResults();
             for (MovieDb movie : movies) {
                 // we need to use this api to retrieve the full info
-                results.add(new MovieImpl(api.getMovieInfo(movie.getId(), language), movieCertifications));
+                results.add(new MovieImpl(api.getMovieInfo(movie.getId(), language), movieCertifications, api));
             }
         } catch (MovieDbException ex) {
             // TODO: add logger
@@ -141,7 +140,7 @@ public class DataRetrieverImpl implements DataRetriever {
             List<TVSeries> series = api.findTvSeriesFromExternalId(imdbID, TmdbFind.ExternalSource.imdb_id, language);
             // let's suppose that we have found only one
             int id = series.get(0).getId();
-            TVSeries serie = api.getTv(id, "it", "images");
+            TVSeries serie = api.getTv(id, language);
             result = new SerieImpl(serie, api);
         } catch (MovieDbException ex) {
             // TODO: add logger
@@ -152,42 +151,18 @@ public class DataRetrieverImpl implements DataRetriever {
 
     @Override
     public List<Serie> retrieveTvSerieFromName(String name, String language) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public List<Artwork> getPosters(String imdbID) {
-        return getArtworks(imdbID, ArtworkType.POSTER);
-    }
-
-    @Override
-    public List<Artwork> getBackdrops(String imdbID) {
-        return getArtworks(imdbID, ArtworkType.BACKDROP);
-    }
-
-    private List<Artwork> getArtworks(String imdbID, ArtworkType artworkType) {
-        List<Artwork> artworks = new ArrayList<>();
+        List<Serie> result = new ArrayList<>();
         try {
-            MovieDb movieData = api.getMovieInfoImdb(imdbID, null, "images");
-            if (movieData != null) {
-                for (com.omertron.themoviedbapi.model.Artwork image : movieData.getImages()) {
-                    if (image.getArtworkType() == artworkType) {
-                        switch (artworkType) {
-                            case POSTER:
-                                artworks.add(new PosterArtworkImpl(configuration.getBaseUrl(), image));
-                                break;
-                            case BACKDROP:
-                                artworks.add(new BackdropArtworkImpl(configuration.getBaseUrl(), image));
-                                break;
-                        }
-                    }
-                }
+            List<TVSeriesBasic> basicSeries = api.searchTv(name, 0, language).getResults();
+            for (TVSeriesBasic basicSerie : basicSeries) {
+                int id = basicSerie.getId();
+                result.add(new SerieImpl(api.getTv(id, language), api));
             }
         } catch (MovieDbException ex) {
             // TODO: add logger
             ex.printStackTrace();
         }
-        return artworks;
+        return result;
     }
 
 }

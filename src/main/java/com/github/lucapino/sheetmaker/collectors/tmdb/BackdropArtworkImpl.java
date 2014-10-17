@@ -15,8 +15,8 @@ import com.github.lucapino.sheetmaker.model.Artwork;
  */
 class BackdropArtworkImpl implements Artwork {
 
-    private com.omertron.themoviedbapi.model.Artwork image;
-    private String baseURL;
+    private final com.omertron.themoviedbapi.model.Artwork image;
+    private final String baseURL;
 
     public BackdropArtworkImpl(String baseURL, com.omertron.themoviedbapi.model.Artwork image) {
         this.image = image;

@@ -1,0 +1,164 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Template>
+  <Settings>
+    <Directors Separator=", " MaximumValues="1" ImagesFolder="" DefaultImage="" />
+    <Actors Separator=", " MaximumValues="8" ImagesFolder="" DefaultImage="" />
+    <Genres Separator=", " MaximumValues="4" ImagesFolder="" DefaultImage="" />
+    <Rating FileName="%PATH%\star_1_18x18.png" />
+    <Studios Separator="" MaximumValues="5" ImagesFolder="" DefaultImage="" />
+    <GuestStars Separator=", " MaximumValues="13" ImagesFolder="" DefaultImage="" />
+    <Writers Separator=", " MaximumValues="13" ImagesFolder="" DefaultImage="" />
+    <Episodes Separator=", " MaximumValues="25" ImagesFolder="" DefaultImage="" />
+    <EpisodesNames Separator=", " MaximumValues="25" ImagesFolder="" DefaultImage="" />
+    <Countries Separator=", " MaximumValues="1" ImagesFolder="" DefaultImage="" />
+    <Subtitles Separator=", " MaximumValues="5" ImagesFolder="" DefaultImage="" />
+    <Languages Separator=", " MaximumValues="5" ImagesFolder="" DefaultImage="" />
+    <LanguageCodes Separator=", " MaximumValues="5" ImagesFolder="" DefaultImage="" />
+  </Settings>
+  <SoundFormats>
+    <SoundFormat Name="AAC" Text="AAC Unknown" Image="%PATH%\..\Common\sound_format\aac.png" />
+    <SoundFormat Name="AAC10" Text="AAC 1.0" Image="%PATH%\..\Common\sound_format\aac10.png" />
+    <SoundFormat Name="AAC20" Text="AAC 2.0" Image="%PATH%\..\Common\sound_format\aac20.png" />
+    <SoundFormat Name="AAC21" Text="AAC 2.1" Image="%PATH%\..\Common\sound_format\aac21.png" />
+    <SoundFormat Name="AAC40" Text="AAC 4.0" Image="%PATH%\..\Common\sound_format\aac40.png" />
+    <SoundFormat Name="AAC41" Text="AAC 4.1" Image="%PATH%\..\Common\sound_format\aac41.png" />
+    <SoundFormat Name="AAC51" Text="AAC 5.1" Image="%PATH%\..\Common\sound_format\aac51.png" />
+    <SoundFormat Name="AAC70" Text="AAC 7.0" Image="%PATH%\..\Common\sound_format\aac70.png" />
+    <SoundFormat Name="AAC71" Text="AAC 7.1" Image="%PATH%\..\Common\sound_format\aac71.png" />
+    <SoundFormat Name="DD" Text="DD Unknown" Image="%PATH%\..\Common\sound_format\dd.png" />
+    <SoundFormat Name="DD20" Text="Dolby Digital 2.0" Image="%PATH%\..\Common\sound_format\dd20.png" />
+    <SoundFormat Name="DD21" Text="Dolby Digital 2.1" Image="%PATH%\..\Common\sound_format\dd21.png" />
+    <SoundFormat Name="DD40" Text="Dolby Digital 4.0" Image="%PATH%\..\Common\sound_format\dd40.png" />
+    <SoundFormat Name="DD41" Text="Dolby Digital 4.1" Image="%PATH%\..\Common\sound_format\dd41.png" />
+    <SoundFormat Name="DD51" Text="Dolby Digital 5.1" Image="%PATH%\..\Common\sound_format\dd51.png" />
+    <SoundFormat Name="DD70" Text="Dolby Digital 7.0" Image="%PATH%\..\Common\sound_format\dd70.png" />
+    <SoundFormat Name="DD71" Text="Dolby Digital 7.1" Image="%PATH%\..\Common\sound_format\dd71.png" />
+    <SoundFormat Name="DDPLUS" Text="Dolby Digital Plus" Image="%PATH%\..\Common\sound_format\ddplus.png" />
+    <SoundFormat Name="DTRUEHD" Text="Dolby True HD" Image="%PATH%\..\Common\sound_format\dtruehd.png" />
+    <SoundFormat Name="DTS" Text="DTS Unknown" Image="%PATH%\..\Common\sound_format\dts.png" />
+    <SoundFormat Name="DTS20" Text="DTS 2.0" Image="%PATH%\..\Common\sound_format\dts20.png" />
+    <SoundFormat Name="DTS21" Text="DTS 2.1" Image="%PATH%\..\Common\sound_format\dts21.png" />
+    <SoundFormat Name="DTS40" Text="DTS 4.0" Image="%PATH%\..\Common\sound_format\dts40.png" />
+    <SoundFormat Name="DTS41" Text="DTS 4.1" Image="%PATH%\..\Common\sound_format\dts41.png" />
+    <SoundFormat Name="DTS51" Text="DTS 5.1" Image="%PATH%\..\Common\sound_format\dts51.png" />
+    <SoundFormat Name="DTS70" Text="DTS 7.0" Image="%PATH%\..\Common\sound_format\dts70.png" />
+    <SoundFormat Name="DTS71" Text="DTS 7.1" Image="%PATH%\..\Common\sound_format\dts71.png" />
+    <SoundFormat Name="DTSES" Text="DTS ES" Image="%PATH%\..\Common\sound_format\dtses.png" />
+    <SoundFormat Name="DTSHD" Text="DTS HD" Image="%PATH%\..\Common\sound_format\dtshd.png" />
+    <SoundFormat Name="FLAC" Text="Flac" Image="%PATH%\..\Common\sound_format\flac.png" />
+    <SoundFormat Name="FLAC20" Text="Flac 2.0" Image="%PATH%\..\Common\sound_format\flac20.png" />
+    <SoundFormat Name="FLAC21" Text="Flac 2.1" Image="%PATH%\..\Common\sound_format\flac21.png" />
+    <SoundFormat Name="FLAC40" Text="Flac 4.0" Image="%PATH%\..\Common\sound_format\flac40.png" />
+    <SoundFormat Name="FLAC41" Text="Flac 4.1" Image="%PATH%\..\Common\sound_format\flac41.png" />
+    <SoundFormat Name="FLAC51" Text="Flac 5.1" Image="%PATH%\..\Common\sound_format\flac51.png" />
+    <SoundFormat Name="FLAC70" Text="Flac 7.0" Image="%PATH%\..\Common\sound_format\flac70.png" />
+    <SoundFormat Name="FLAC71" Text="Flac 7.1" Image="%PATH%\..\Common\sound_format\flac71.png" />
+    <SoundFormat Name="MLP" Text="MLP" Image="%PATH%\..\Common\sound_format\mlp.png" />
+    <SoundFormat Name="MP3" Text="All Mpeg" Image="%PATH%\..\Common\sound_format\mp3.png" />
+    <SoundFormat Name="MP310" Text="MP3 1.0" Image="%PATH%\..\Common\sound_format\mp310.png" />
+    <SoundFormat Name="MP320" Text="MP3 2.0" Image="%PATH%\..\Common\sound_format\mp320.png" />
+    <SoundFormat Name="OGG" Text="Ogg" Image="%PATH%\..\Common\sound_format\ogg.png" />
+    <SoundFormat Name="OGG20" Text="Ogg 2.0" Image="%PATH%\..\Common\sound_format\ogg20.png" />
+    <SoundFormat Name="OGG21" Text="Ogg 2.1" Image="%PATH%\..\Common\sound_format\ogg21.png" />
+    <SoundFormat Name="OGG40" Text="Ogg 4.0" Image="%PATH%\..\Common\sound_format\ogg40.png" />
+    <SoundFormat Name="OGG41" Text="Ogg 4.1" Image="%PATH%\..\Common\sound_format\ogg41.png" />
+    <SoundFormat Name="OGG51" Text="Ogg 5.1" Image="%PATH%\..\Common\sound_format\ogg51.png" />
+    <SoundFormat Name="OGG70" Text="Ogg 7.0" Image="%PATH%\..\Common\sound_format\ogg70.png" />
+    <SoundFormat Name="OGG71" Text="Ogg 7.1" Image="%PATH%\..\Common\sound_format\ogg71.png" />
+    <SoundFormat Name="VORBIS" Text="vorbis" Image="" />
+    <SoundFormat Name="WMA" Text="WMA" Image="" />
+  </SoundFormats>
+  <MediaFormats>
+    <MediaFormat Name="AVCHD" Text="AVCHD" Image="%PATH%\..\Common\media_format\avchd.png" />
+    <MediaFormat Name="BLURAY" Text="Blu-Ray" Image="%PATH%\..\Common\media_format\bluray.png" />
+    <MediaFormat Name="DVD" Text="DVD" Image="%PATH%\..\Common\media_format\dvd.png" />
+    <MediaFormat Name="flv" Text="FLV" Image="%PATH%\..\Common\video_format\flv.png" />
+    <MediaFormat Name="HDDVD" Text="HD DVD" Image="%PATH%\..\Common\media_format\hddvd.png" />
+    <MediaFormat Name="mov" Text="MOV" Image="%PATH%\..\Common\video_format\mov.png" />
+    <MediaFormat Name="mpeg" Text="MPEG" Image="%PATH%\..\Common\media_format\mpeg.png" />
+    <MediaFormat Name="mpeg2" Text="MPEG-2" Image="%PATH%\..\Common\media_format\mpeg.png" />
+    <MediaFormat Name="mpeg4" Text="MPEG-4" Image="%PATH%\..\Common\media_format\mpeg.png" />
+    <MediaFormat Name="MKV" Text="MKV" Image="%PATH%\..\Common\media_format\mkv.png" />
+    <MediaFormat Name="rm" Text="RM" Image="%PATH%\..\Common\video_format\rm.png" />
+    <MediaFormat Name="rmvb" Text="RMVB" Image="%PATH%\..\Common\video_format\rmvb.png" />
+  </MediaFormats>
+  <VideoFormats>
+    <VideoFormat Name="avc" Text="AVC" Image="%PATH%\..\Common\video_format\h264.png" />
+    <VideoFormat Name="divx" Text="Divx" Image="%PATH%\..\Common\video_format\divx.png" />
+    <VideoFormat Name="wmv" Text="WMV" Image="%PATH%\..\Common\video_format\wmv.png" />
+    <VideoFormat Name="xvid" Text="XviD" Image="%PATH%\..\Common\video_format\xvid.png" />
+    <VideoFormat Name="mpeg" Text="MPEG-4" Image="" />
+  </VideoFormats>
+  <Resolutions>
+    <Resolution Name="288P" Text="288p" Image="%PATH%\..\Common\image_resolution\288p.png" />
+    <Resolution Name="480I" Text="480I" Image="%PATH%\..\Common\image_resolution\480i.png" />
+    <Resolution Name="480P" Text="480p" Image="%PATH%\..\Common\image_resolution\480.png" />
+    <Resolution Name="576I" Text="576I" Image="%PATH%\..\Common\image_resolution\576i.png" />
+    <Resolution Name="576P" Text="576p" Image="%PATH%\..\Common\image_resolution\576.png" />
+    <Resolution Name="720I" Text="720I" Image="%PATH%\..\Common\image_resolution\720i.png" />
+    <Resolution Name="720P" Text="720p" Image="%PATH%\..\Common\image_resolution\720.png" />
+    <Resolution Name="1080I" Text="1080I" Image="%PATH%\..\Common\image_resolution\1080i.png" />
+    <Resolution Name="1080P" Text="1080p" Image="%PATH%\..\Common\image_resolution\1080.png" />
+  </Resolutions>
+  <ImageDrawTemplate SDKVersion="3.0">
+    <OutputImageSettings ColorDepth="Format32bppAlpha" ImageFormat="Jpeg" JpegCompressionLevel="80" Dpi="96" />
+    <Canvas AutoSize="False" CenterElements="False" Height="720" Width="1280" Fill="Solid,16777215,-16777216,BackwardDiagonal,-1,-16777216,0,,Tile,None,50,100,,,,0,0,0,0,Line,True" />
+    <Elements>
+      <ImageElement Name="Background" X="0" Y="0" Width="1280" Height="720" Source="File" Offset="0" MultiPageIndex="-1" SourceData="%PATH%\masterbackdrop.png" NullImageUrl="" PreserveMetaData="True" TGD_IsLocked="False" TGD_IsVisible="True" />
+      <ImageElement Name="Fanart1 left" X="0" Y="123" Width="702" Height="358" Source="File" Offset="0" MultiPageIndex="-1" SourceData="%FANART1%" NullImageUrl="" PreserveMetaData="True" TGD_IsLocked="False" TGD_IsVisible="True" />
+      <ImageElement Name="Circle overay" X="0" Y="0" Width="1280" Height="720" Source="File" Offset="0" MultiPageIndex="-1" SourceData="%PATH%\sheetoverlay162.png" NullImageUrl="" PreserveMetaData="True" TGD_IsLocked="False" TGD_IsVisible="True" />
+      <TextElement Name="Movietitle" X="58" Y="52" Width="1100" Height="60" AutoSize="False" Multiline="False" Font="Revofit by Drakoheart,35,True,False,False,False,Point,HARVEIT_.TTF,0" ForeColor="-1" StrokeColor="-16777216" StrokeWidth="0" Text="%TITLE%" TextAlignment="TopLeft" TextQuality="AntiAlias" TGD_IsLocked="False" TGD_IsVisible="True">
+        <Actions>
+          <GlassTable ReflectionLocation="Custom" ReflectionLocationX="0" ReflectionLocationY="32" ReflectionOpacity="50" ReflectionPercentage="50" TGD_IsVisible="True" />
+          <DropShadow Angle="315" Color="-16777216" Distance="5" Opacity="100" Softness="5" TGD_IsVisible="True" />
+        </Actions>
+      </TextElement>
+      <TextElement Name="Runtime " X="1010" Y="432" Width="210" Height="60" AutoSize="False" Multiline="False" Font="Revofit by Drakoheart,25,Point,HARVEIT_.TTF,0" ForeColor="-1" StrokeColor="-16777216" StrokeWidth="0" Text="%DURATION% MINUTES" TextAlignment="TopLeft" TextQuality="AntiAlias" TGD_IsLocked="False" TGD_IsVisible="True" />
+      <TextElement Name="Release Date" X="1038" Y="464" Width="177" Height="23" AutoSize="False" Multiline="False" Font="Revofit by Drakoheart,10,True,False,False,False,Point,,0" ForeColor="-2302785" StrokeColor="-16777216" StrokeWidth="0" Text="RELEASE DATE %RELEASEDATE%" TextAlignment="TopLeft" TextQuality="AntiAlias" TGD_IsLocked="False" TGD_IsVisible="True" />
+      <TextElement Name="Plot Headline" X="694" Y="196" Width="500" Height="30" AutoSize="False" Multiline="False" Font="Revofit by Drakoheart,16,True,False,False,False,Point,HARVEIT_.TTF,0" ForeColor="-11884880" StrokeColor="-16777216" StrokeWidth="0" Text="%TITLE%" TextAlignment="TopLeft" TextQuality="AntiAlias" TGD_IsLocked="False" TGD_IsVisible="True">
+        <Actions>
+          <GaussianBlur Radius="2" TGD_IsVisible="True" />
+        </Actions>
+      </TextElement>
+      <TextElement Name="Plot Headline" X="693" Y="195" Width="500" Height="30" AutoSize="False" Multiline="False" Font="Revofit by Drakoheart,16,True,False,False,False,Point,HARVEIT_.TTF,0" ForeColor="-1444876" StrokeColor="-16777216" StrokeWidth="0" Text="%TITLE%" TextAlignment="TopLeft" TextQuality="AntiAlias" TGD_IsLocked="False" TGD_IsVisible="True">
+        <Actions>
+          <DropShadow Angle="320" Color="-16777216" Distance="3" Opacity="100" Softness="2" TGD_IsVisible="True" />
+        </Actions>
+      </TextElement>
+      <TextElement Name="Plot" X="684" Y="226" Width="500" Height="148" AutoSize="False" Multiline="True" Font="Revofit by Drakoheart,12,True,False,False,False,Point,,0" ForeColor="-2430485" StrokeColor="-16777216" StrokeWidth="0" Text="%PLOT%" TextAlignment="TopLeft" TextQuality="AntiAlias" TGD_IsLocked="False" TGD_IsVisible="True">
+        <Actions>
+          <DropShadow Angle="320" Color="-16777216" Distance="3" Opacity="100" Softness="2" TGD_IsVisible="True" />
+          <AdjustOpacity Opacity="80" TGD_IsVisible="True" />
+        </Actions>
+      </TextElement>
+      <TextElement Name="Cast" X="698" Y="406" Width="500" Height="20" AutoSize="False" Multiline="False" Font="Revofit by Drakoheart,10,True,True,False,False,Point,,0" ForeColor="-10499913" StrokeColor="-16777216" StrokeWidth="0" Text="Starring: %ACTORS%" TextAlignment="TopLeft" TextQuality="AntiAlias" TGD_IsLocked="False" TGD_IsVisible="True">
+        <Actions>
+          <DropShadow Angle="320" Color="-16777216" Distance="3" Opacity="100" Softness="2" TGD_IsVisible="True" />
+        </Actions>
+      </TextElement>
+      <TextElement Name="IMDBTEXT" X="906" Y="146" Width="0" Height="0" AutoSize="True" Multiline="False" Font="Arial,10,True,False,False,False,Point,,0" ForeColor="-2500135" StrokeColor="-16777216" StrokeWidth="0" Text="IMDB" TextAlignment="TopLeft" TextQuality="AntiAlias" TGD_IsLocked="False" TGD_IsVisible="True" />
+      <ImageElement Name="Starmask" X="949" Y="142" Width="177" Height="18" Source="File" Offset="0" MultiPageIndex="-1" SourceData="%PATH%\starmask.png" NullImageUrl="" PreserveMetaData="True" TGD_IsLocked="False" TGD_IsVisible="True" />
+      <ImageElement Name="Stars" X="947" Y="142" Width="177" Height="18" Source="Base64String" Offset="0" MultiPageIndex="-1" SourceData="%RATINGSTARS%" NullImageUrl="" PreserveMetaData="True" TGD_IsLocked="False" TGD_IsVisible="True" />
+      <TextElement Name="IMDB Rating" X="1132" Y="146" Width="0" Height="0" AutoSize="True" Multiline="False" Font="Arial,10,True,False,False,False,Point,,0" ForeColor="-2500135" StrokeColor="-16777216" StrokeWidth="0" Text="%RATING%" TextAlignment="TopLeft" TextQuality="AntiAlias" TGD_IsLocked="False" TGD_IsVisible="True" />
+      <ImageElement Name="Resolution" X="685" Y="133" Width="54" Height="37" Source="Base64String" Offset="0" MultiPageIndex="-1" SourceData="%RESOLUTION%" NullImageUrl="" PreserveMetaData="True" TGD_IsLocked="False" TGD_IsVisible="True" />
+      <ImageElement Name="VCodec" X="844" Y="133" Width="54" Height="37" Source="Base64String" Offset="0" MultiPageIndex="-1" SourceData="%VIDEOFORMAT%" NullImageUrl="" PreserveMetaData="True" TGD_IsLocked="False" TGD_IsVisible="True" />
+      <ImageElement Name="Media" X="788" Y="133" Width="54" Height="37" Source="Base64String" Offset="0" MultiPageIndex="-1" SourceData="%MEDIAFORMAT%" NullImageUrl="" PreserveMetaData="True" TGD_IsLocked="False" TGD_IsVisible="True" />
+      <ImageElement Name="Sound" X="735" Y="133" Width="54" Height="37" Source="Base64String" Offset="0" MultiPageIndex="-1" SourceData="%SOUNDFORMAT%" NullImageUrl="" PreserveMetaData="True" TGD_IsLocked="False" TGD_IsVisible="True" />
+      <TextElement Name="Director" X="689" Y="455" Width="250" Height="20" AutoSize="False" Multiline="False" Font="Revofit by Drakoheart,12,True,False,False,False,Point,,0" ForeColor="-11555942" StrokeColor="-16777216" StrokeWidth="0" Text="Directed by: %DIRECTORS%" TextAlignment="TopLeft" TextQuality="AntiAlias" TGD_IsLocked="False" TGD_IsVisible="True">
+        <Actions>
+          <DropShadow Angle="320" Color="-16777216" Distance="3" Opacity="100" Softness="2" TGD_IsVisible="True" />
+        </Actions>
+      </TextElement>
+      <TextElement Name="RATED" X="688" Y="438" Width="250" Height="20" AutoSize="False" Multiline="False" Font="Revofit by Drakoheart,12,True,False,False,False,Point,,0" ForeColor="-1" StrokeColor="-16777216" StrokeWidth="0" Text="RATED %CERTIFICATIONTEXT%" TextAlignment="TopLeft" TextQuality="AntiAlias" TGD_IsLocked="False" TGD_IsVisible="True">
+        <Actions>
+          <DropShadow Angle="320" Color="-16777216" Distance="3" Opacity="100" Softness="2" TGD_IsVisible="True" />
+        </Actions>
+      </TextElement>
+      <TextElement Name="GENRE" X="694" Y="387" Width="500" Height="20" AutoSize="False" Multiline="False" Font="Revofit by Drakoheart,12,True,False,False,False,Point,,0" ForeColor="-6766665" StrokeColor="-16777216" StrokeWidth="0" Text="Genre %GENRES%" TextAlignment="TopLeft" TextQuality="AntiAlias" TGD_IsLocked="False" TGD_IsVisible="True">
+        <Actions>
+          <DropShadow Angle="320" Color="-16777216" Distance="3" Opacity="100" Softness="2" TGD_IsVisible="True" />
+        </Actions>
+      </TextElement>
+    </Elements>
+  </ImageDrawTemplate>
+</Template>

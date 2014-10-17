@@ -5,6 +5,8 @@
  */
 package com.github.lucapino.sheetmaker.collectors.tmdb;
 
+import static com.github.lucapino.sheetmaker.collectors.tmdb.DataRetrieverImpl.CONFIGURATION;
+import com.github.lucapino.sheetmaker.model.Artwork;
 import com.github.lucapino.sheetmaker.model.tv.Episode;
 import com.github.lucapino.sheetmaker.model.tv.Season;
 import com.omertron.themoviedbapi.MovieDbException;
@@ -13,6 +15,7 @@ import com.omertron.themoviedbapi.model.person.PersonCast;
 import com.omertron.themoviedbapi.model.person.PersonCrew;
 import com.omertron.themoviedbapi.model.tv.TVCredits;
 import com.omertron.themoviedbapi.model.tv.TVEpisode;
+import com.omertron.themoviedbapi.model.type.ArtworkType;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -102,6 +105,19 @@ public class EpisodeImpl implements Episode {
     @Override
     public Season getSeason() {
         return season;
+    }
+
+    @Override
+    public Artwork getEpisodeArtwork() {
+        Artwork artwork = null;
+        try {
+            String imagePath = api.getTvEpisodeImages(season.getSerie().getId(), season.getNumber(), episode.getEpisodeNumber(), null);
+            artwork = new PosterArtworkImpl(CONFIGURATION.getBaseUrl(), imagePath);
+        } catch (MovieDbException ex) {
+            // TODO: add logger
+            ex.printStackTrace();
+        }
+        return artwork;
     }
 
 }
