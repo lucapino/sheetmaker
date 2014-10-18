@@ -33,6 +33,8 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 import org.apache.commons.io.IOUtils;
+import org.im4java.core.ConvertCmd;
+import org.im4java.core.IMOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

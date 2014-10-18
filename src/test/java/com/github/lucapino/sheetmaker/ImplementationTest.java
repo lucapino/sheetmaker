@@ -5,12 +5,10 @@
  */
 package com.github.lucapino.sheetmaker;
 
-import com.omertron.themoviedbapi.TheMovieDbApi;
-import com.omertron.themoviedbapi.model.movie.MovieDb;
-import com.omertron.themoviedbapi.model.person.PersonCrew;
-import com.omertron.themoviedbapi.model.person.PersonMovieOld;
-import com.omertron.themoviedbapi.results.TmdbResultsList;
-import java.util.List;
+import java.awt.image.BufferedImage;
+import org.im4java.core.ConvertCmd;
+import org.im4java.core.IMOperation;
+import org.im4java.core.MontageCmd;
 import org.testng.annotations.Test;
 
 /**
@@ -22,14 +20,33 @@ public class ImplementationTest {
     @Test
     public void testImplementation() throws Exception {
 
-        TheMovieDbApi api = new TheMovieDbApi(System.getProperty("tmdb.api.key"));
-        TmdbResultsList<PersonMovieOld> credits = api.getMovieCredits(156022);
+        
+        IMOperation op = new IMOperation();
+//        op.addImage();
+        op.alpha("Background");
+        op.background("transparent");
+        op.font("Arial");
+        op.fill("Black");
+        op.pointsize(24);
+        op.size(200, 200);
+        op.geometry(200, 200, 200, 200);
+        op.addRawArgs("-define", "pango:justify=true", "pango:\"Contributions to IM Examples are welcome via the IM Forum.\"");
+//        op.addRawArgs("label:Test");
+        op.addImage();
+        ConvertCmd convert = new ConvertCmd();
+        String outfile = "/tmp/fileOut.png";
+        convert.createScript("/tmp/myscript.sh",op);
+        convert.run(op, outfile);
+        
+        
 
-        List<PersonMovieOld> persons = credits.getResults();
-        for (PersonMovieOld person : persons) {
-            System.out.println(person.getDepartment() + " " + person.getJob() + " " + person.toString());
-        }
-
+//        TheMovieDbApi api = new TheMovieDbApi(System.getProperty("tmdb.api.key"));
+//        TmdbResultsList<PersonMovieOld> credits = api.getMovieCredits(156022);
+//
+//        List<PersonMovieOld> persons = credits.getResults();
+//        for (PersonMovieOld person : persons) {
+//            System.out.println(person.getDepartment() + " " + person.getJob() + " " + person.toString());
+//        }
 //        TheMovieDbApi api = new TheMovieDbApi(System.getProperty("tmdb.api.key"));
 //        List<TVSeries> series = api.findTvSeriesFromExternalId("tt1219024", TmdbFind.ExternalSource.imdb_id, "it");
 //        int id = series.get(0).getId();

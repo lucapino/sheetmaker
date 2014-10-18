@@ -13,15 +13,20 @@ import static com.github.lucapino.sheetmaker.renderer.Constants.RESOLUTIONS;
 import static com.github.lucapino.sheetmaker.renderer.Constants.SETTINGS;
 import static com.github.lucapino.sheetmaker.renderer.Constants.SOUND_FORMATS;
 import static com.github.lucapino.sheetmaker.renderer.Constants.VIDEO_FORMATS;
-import com.jhlabs.image.BicubicScaleFilter;
+import com.jhlabs.image.GaussianFilter;
 import com.jhlabs.image.OpacityFilter;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.Shape;
+import java.awt.font.FontRenderContext;
+import java.awt.font.LineBreakMeasurer;
 import java.awt.font.TextAttribute;
+import java.awt.font.TextLayout;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -35,7 +40,10 @@ import java.io.InputStream;
 import java.io.PushbackInputStream;
 import java.io.StringReader;
 import java.net.URL;
+import java.text.AttributedCharacterIterator;
+import java.text.AttributedString;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -45,6 +53,7 @@ import javax.swing.JPanel;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.WordUtils;
+import org.imgscalr.Scalr;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.input.SAXBuilder;
@@ -57,7 +66,7 @@ import org.slf4j.LoggerFactory;
  */
 public class TemplateRenderer {
 
-    Pattern pattern = Pattern.compile("%[^\\d]*%(\\{[^\\d]*\\})*");
+    Pattern pattern = Pattern.compile("%[\\w]*%(\\{[\\w]*\\})*");
 
     private final static Logger logger = LoggerFactory.getLogger(TemplateRenderer.class);
 
@@ -100,8 +109,8 @@ public class TemplateRenderer {
         templateString = templateString.replaceAll("%FANART2%", fanArt2FilePath);
         templateString = templateString.replaceAll("%FANART3%", fanArt3FilePath);
         templateString = templateString.replaceAll("%COVER%", coverFilePath);
-        StringReader templateReader = new StringReader(templateString.trim());
-        System.out.println(templateString.trim());
+        StringReader templateReader = new StringReader(templateString);
+        System.out.println(templateString);
         logger.info("Template parsed...");
         // parse XML
         // the SAXBuilder is the easiest way to create the JDOM2 objects.
@@ -147,18 +156,18 @@ public class TemplateRenderer {
         // OutputImageSettings
         logger.info("reading ImageDrawTemlate attributes...");
         Element outputImageSettingsElement = drawImageTemplateElement.getChild(OUTPUT_IMAGE_SETTINGS);
-        String colorDepth = outputImageSettingsElement.getAttributeValue("ColorDepth").trim();
-        String imageForat = outputImageSettingsElement.getAttributeValue("ImageFormat").trim();
-        String jpegCompressionLevel = outputImageSettingsElement.getAttributeValue("JpegCompressionLevel").trim();
-        String dpi = outputImageSettingsElement.getAttributeValue("Dpi").trim();
+        String colorDepth = outputImageSettingsElement.getAttributeValue("ColorDepth");
+        String imageForat = outputImageSettingsElement.getAttributeValue("ImageFormat");
+        String jpegCompressionLevel = outputImageSettingsElement.getAttributeValue("JpegCompressionLevel");
+        String dpi = outputImageSettingsElement.getAttributeValue("Dpi");
         logger.info("Reading Canvas attributes...");
         // Canvas
         Element canvasElement = drawImageTemplateElement.getChild(CANVAS);
-        String autoSize = canvasElement.getAttributeValue("AutoSize").trim();
-        String centerElements = canvasElement.getAttributeValue("CenterElements").trim();
-        int height = Integer.valueOf(canvasElement.getAttributeValue("Height").trim());
-        int width = Integer.valueOf(canvasElement.getAttributeValue("Width").trim());
-        String fill = canvasElement.getAttributeValue("Fill").trim();
+        String autoSize = canvasElement.getAttributeValue("AutoSize");
+        String centerElements = canvasElement.getAttributeValue("CenterElements");
+        int height = Integer.valueOf(canvasElement.getAttributeValue("Height"));
+        int width = Integer.valueOf(canvasElement.getAttributeValue("Width"));
+        String fill = canvasElement.getAttributeValue("Fill");
 
         // create image of specified dimensions
         logger.info("Creating working image...");
@@ -186,17 +195,17 @@ public class TemplateRenderer {
     }
 
     private void processImageElement(Graphics2D g2, Element imageElement) throws Exception {
-        logger.info("Processing {}...", imageElement.getAttributeValue("Name").trim());
-        int x = Integer.valueOf(imageElement.getAttributeValue("X").trim());
-        int y = Integer.valueOf(imageElement.getAttributeValue("Y").trim());
-        int width = Integer.valueOf(imageElement.getAttributeValue("Width").trim());
-        int height = Integer.valueOf(imageElement.getAttributeValue("Height").trim());
+        logger.info("Processing {}...", imageElement.getAttributeValue("Name"));
+        int x = Integer.valueOf(imageElement.getAttributeValue("X"));
+        int y = Integer.valueOf(imageElement.getAttributeValue("Y"));
+        int width = Integer.valueOf(imageElement.getAttributeValue("Width"));
+        int height = Integer.valueOf(imageElement.getAttributeValue("Height"));
         // File or Base64String
-        String sourceType = imageElement.getAttributeValue("Source").trim();
-        String sourceData = imageElement.getAttributeValue("SourceData").trim();
-        String nullImageUrl = imageElement.getAttributeValue("NullImageUrl").trim();
-//        String sourceDpi = imageElement.getAttributeValue("SourceDpi").trim();
-//        boolean useSourceDpi = Boolean.valueOf(imageElement.getAttributeValue("UseSourceDpi").trim());
+        String sourceType = imageElement.getAttributeValue("Source");
+        String sourceData = imageElement.getAttributeValue("SourceData");
+        String nullImageUrl = imageElement.getAttributeValue("NullImageUrl");
+//        String sourceDpi = imageElement.getAttributeValue("SourceDpi");
+//        boolean useSourceDpi = Boolean.valueOf(imageElement.getAttributeValue("UseSourceDpi"));
         BufferedImage tmpImage = null;
         switch (sourceType) {
             case "File":
@@ -241,48 +250,73 @@ public class TemplateRenderer {
         }
         if (tmpImage != null) {
             // process actions
-            tmpImage = processActions(imageElement, tmpImage, g2);
+            tmpImage = processActions(imageElement, tmpImage);
             // alway resize
-            BicubicScaleFilter scaleFilter = new BicubicScaleFilter(width, height);
-            tmpImage = scaleFilter.filter(tmpImage, null);
+            Scalr.resize(tmpImage, Scalr.Method.ULTRA_QUALITY, Scalr.Mode.FIT_TO_WIDTH,
+                    width, height, Scalr.OP_ANTIALIAS);
+//            BicubicScaleFilter scaleFilter = new BicubicScaleFilter(width, height);
+//            tmpImage = scaleFilter.filter(tmpImage, null);
             g2.drawImage(tmpImage, x, y, width, height, null);
         }
-        logger.info("{} processed...", imageElement.getAttributeValue("Name").trim());
+        logger.info("{} processed...", imageElement.getAttributeValue("Name"));
     }
+// The LineBreakMeasurer used to line-break the paragraph.
+    private LineBreakMeasurer lineMeasurer;
+
+    // index of the first character in the paragraph.
+    private int paragraphStart;
+
+    // index of the first character after the end of the paragraph.
+    private int paragraphEnd;
+
+    private static final Hashtable<TextAttribute, Object> map
+            = new Hashtable<TextAttribute, Object>();
 
     private void processTextElement(Graphics2D g2, Element textElement) {
 
-        int x = Integer.valueOf(textElement.getAttributeValue("X").trim());
-        int y = Integer.valueOf(textElement.getAttributeValue("Y").trim());
-        int width = Integer.valueOf(textElement.getAttributeValue("Width").trim());
-        int height = Integer.valueOf(textElement.getAttributeValue("Height").trim());
+        int x = Integer.valueOf(textElement.getAttributeValue("X"));
+        int y = Integer.valueOf(textElement.getAttributeValue("Y"));
+        int width = Integer.valueOf(textElement.getAttributeValue("Width"));
+        int height = Integer.valueOf(textElement.getAttributeValue("Height"));
         String alignment = textElement.getAttributeValue("TextAlignment");
-        boolean antiAlias = textElement.getAttributeValue("TextQuality").trim().equalsIgnoreCase("antialias");
+        boolean multiline = Boolean.valueOf(textElement.getAttributeValue("Multiline").toLowerCase());
+        boolean antiAlias = textElement.getAttributeValue("TextQuality").equalsIgnoreCase("antialias");
         if (antiAlias) {
             g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_VRGB);
 //            g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         }
-        Font font = parseFont(textElement.getAttributeValue("Font").trim());
+        Font font = parseFont(textElement.getAttributeValue("Font"));
         // now get the text
-        String text = textElement.getAttributeValue("Text").trim();
+        String text = textElement.getAttributeValue("Text");
         // if text matches pattern of %VARIABLE%{MODIFIER}
         logger.info("parsing token {}", text);
         Matcher matcher = pattern.matcher(text);
-        if (matcher.find()) {
+        int start = 0;
+        while (matcher.find(start)) {
             // apply modification
-            text = matcher.replaceFirst(applyModifier(matcher.group()));
-
+            text = text.replace(matcher.group(), applyModifier(matcher.group()));
+            start = matcher.end();
         }
-////        FontMetrics fm = g2.getFontMetrics(font);
-////        FontRenderContext fontRendContext = g2.getFontRenderContext();
-////        TextLayout textLayout = new TextLayout(text, font, fontRendContext);
-////        Shape shape = textLayout.getOutline(null);
-////        Rectangle outlineBounds = fm.getStringBounds(text, g2).getBounds();
-//        // we need to create a transparent image to paint
-////        BufferedImage tmpImage = new BufferedImage(outlineBounds.width, outlineBounds.height, BufferedImage.TYPE_INT_RGB);
+        BufferedImage tmpImage;
+        if (width > 0 && height > 0) {
+            // create a transparent tmpImage
+            tmpImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        } else {
+            FontMetrics fm = g2.getFontMetrics(font);
+            Rectangle outlineBounds = fm.getStringBounds(text, g2).getBounds();
+//         we need to create a transparent image to paint
+            tmpImage = new BufferedImage(outlineBounds.width, outlineBounds.height, BufferedImage.TYPE_INT_RGB);
+        }
+        Graphics2D g2d = tmpImage.createGraphics();
+        g2d.setFont(font);
+        Color textColor = new Color(Integer.valueOf(textElement.getAttributeValue("ForeColor")));
+        g2d.setColor(textColor);
+        drawString(g2d, text, new Rectangle(0, 0, width, height), Align.valueOf(alignment), 0, multiline);
+        tmpImage = processActions(textElement, tmpImage);
+
 ////        Graphics2D g2d = tmpImage.createGraphics();
 //        // set current font
-        g2.setFont(font);
+//        g2.setFont(font);
 ////        g2d.setComposite(AlphaComposite.Clear);
 ////        g2d.fillRect(0, 0, width, height);
 ////        g2d.setComposite(AlphaComposite.Src);
@@ -308,14 +342,14 @@ public class TemplateRenderer {
 ////            g2d.setColor(originalColor);
 //        }
 ////        // get the text color
-        Color textColor = new Color(Integer.valueOf(textElement.getAttributeValue("ForeColor").trim()));
-        g2.setColor(textColor);
+//        Color textColor = new Color(Integer.valueOf(textElement.getAttributeValue("ForeColor")));
+//        g2.setColor(textColor);
 ////        g2d.setBackground(Color.BLACK);
 ////        g2d.setStroke(new BasicStroke(2));
 ////        g2d.setColor(Color.WHITE);
 //        // draw the text
 //
-        drawString(g2, text, new Rectangle(x, y, width, height), Align.valueOf(alignment), 0);
+//        drawString(g2, text, new Rectangle(x, y, width, height), Align.valueOf(alignment), 0, multiline);
 //        g2.drawString(text, x, y);
 //        Rectangle rect = new Rectangle(x, y, width, height); // defines the desired size and position
 //        FontMetrics fm = g2.getFontMetrics();
@@ -342,17 +376,16 @@ public class TemplateRenderer {
 //        BicubicScaleFilter scaleFilter = new BicubicScaleFilter(width, height);
 //        tmpImage = scaleFilter.filter(tmpImage, null);
         // draw the image to the source
-        /*
-         g2.drawImage(tmpImage, x, y, width, height, null);
-         try {
-         ScreenImage.writeImage(tmpImage, "/tmp/images/" + textElement.getAttributeValue("Name") + ".png");
-         } catch (IOException ex) {
+        g2.drawImage(tmpImage, x, y, width, height, null);
+//        try {
+//            ScreenImage.writeImage(tmpImage, "/tmp/images/" + textElement.getAttributeValue("Name") + ".png");
+//        } catch (IOException ex) {
+//
+//        }
 
-         }
-         */
     }
 
-    private BufferedImage processActions(Element imageElement, BufferedImage tmpImage, Graphics2D g2) {
+    private BufferedImage processActions(Element imageElement, BufferedImage tmpImage) {
         // verify if there are filters
         Element actions = imageElement.getChild("Actions");
         if (actions != null) {
@@ -371,6 +404,9 @@ public class TemplateRenderer {
                         break;
                     // GaussianBlur
                     case "GaussianBlur":
+                        GaussianFilter gaussianFilter = new GaussianFilter();
+                        gaussianFilter.setRadius(Float.valueOf(filter.getAttributeValue("Radius")));
+                        tmpImage = gaussianFilter.filter(tmpImage, null);
                         break;
                     // AdjustHue
                     case "AdjustHue":
@@ -389,7 +425,7 @@ public class TemplateRenderer {
                         break;
                     // AdjustOpacity
                     case "AdjustOpacity":
-                        int opacity = Integer.valueOf(filter.getAttributeValue("Opacity").trim()) * 255 / 100;
+                        int opacity = Integer.valueOf(filter.getAttributeValue("Opacity")) * 255 / 100;
                         OpacityFilter opacityFilter = new OpacityFilter(opacity);
                         tmpImage = opacityFilter.filter(tmpImage, null);
                         break;
@@ -430,13 +466,13 @@ public class TemplateRenderer {
         int size = Integer.valueOf(fontSpecsArray[1]);
         if (fontSpecsArray.length > 5) {
             // her we have a full description
-            // italic
-            if (Boolean.valueOf(fontSpecsArray[2])) {
-                fontStyle += Font.ITALIC;
-            }
             // bold
-            if (Boolean.valueOf(fontSpecsArray[3])) {
+            if (Boolean.valueOf(fontSpecsArray[2])) {
                 fontStyle += Font.BOLD;
+            }
+            // italic
+            if (Boolean.valueOf(fontSpecsArray[3])) {
+                fontStyle += Font.ITALIC;
             }
             // underline
             isUnderline = Boolean.valueOf(fontSpecsArray[4]);
@@ -489,7 +525,7 @@ public class TemplateRenderer {
         TopCenter, TopRight, MiddleRight, BottomRight, BottomCenter, BottomLeft, MiddleLeft, TopLeft, Center
     }
 
-    public void drawString(Graphics g, String text, RectangularShape bounds, Align align, double angle) {
+    public void drawString(Graphics g, String text, RectangularShape bounds, Align align, double angle, boolean multiline) {
         Graphics2D g2 = (Graphics2D) g;
         Font font = g2.getFont();
         if (angle != 0) {
@@ -517,8 +553,49 @@ public class TemplateRenderer {
             case TopLeft:
                 break;
         }
+        if (multiline) {
+            // Create a new LineBreakMeasurer from the paragraph.
+            // It will be cached and re-used.
+            //if (lineMeasurer == null) {
+            AttributedCharacterIterator paragraph = new AttributedString(text).getIterator();
+            paragraphStart = paragraph.getBeginIndex();
+            paragraphEnd = paragraph.getEndIndex();
+            FontRenderContext frc = g2.getFontRenderContext();
+            lineMeasurer = new LineBreakMeasurer(paragraph, frc);
+        //}
 
-        g2.drawString(text, (float) x, (float) y);
+            // Set break width to width of Component.
+            float breakWidth = (float) bounds.getWidth();
+            float drawPosY = (float) y;
+            // Set position to the index of the first character in the paragraph.
+            lineMeasurer.setPosition(paragraphStart);
+
+            // Get lines until the entire paragraph has been displayed.
+            while (lineMeasurer.getPosition() < paragraphEnd) {
+
+                // Retrieve next layout. A cleverer program would also cache
+                // these layouts until the component is re-sized.
+                TextLayout layout = lineMeasurer.nextLayout(breakWidth);
+
+                // Compute pen x position. If the paragraph is right-to-left we
+                // will align the TextLayouts to the right edge of the panel.
+                // Note: this won't occur for the English text in this sample.
+                // Note: drawPosX is always where the LEFT of the text is placed.
+                float drawPosX = layout.isLeftToRight()
+                        ? (float) x : (float) x + breakWidth - layout.getAdvance();
+
+                // Move y-coordinate by the ascent of the layout.
+                drawPosY += layout.getAscent();
+
+                // Draw the TextLayout at (drawPosX, drawPosY).
+                layout.draw(g2, drawPosX, drawPosY);
+
+                // Move y-coordinate in preparation for next layout.
+                drawPosY += layout.getDescent() + layout.getLeading();
+            }
+        } else {
+            g2.drawString(text, (float) x, (float) y);
+        }
         g2.setFont(font);
     }
 
