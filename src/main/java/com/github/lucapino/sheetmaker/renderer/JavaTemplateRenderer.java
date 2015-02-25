@@ -13,16 +13,23 @@ import static com.github.lucapino.sheetmaker.renderer.Constants.RESOLUTIONS;
 import static com.github.lucapino.sheetmaker.renderer.Constants.SETTINGS;
 import static com.github.lucapino.sheetmaker.renderer.Constants.SOUND_FORMATS;
 import static com.github.lucapino.sheetmaker.renderer.Constants.VIDEO_FORMATS;
+import com.github.lucapino.sheetmaker.utils.ScreenImage;
+import com.jhlabs.image.FlipFilter;
 import com.jhlabs.image.GaussianFilter;
+import com.jhlabs.image.GlowFilter;
+import com.jhlabs.image.MirrorFilter;
 import com.jhlabs.image.OpacityFilter;
+import com.jhlabs.image.RotateFilter;
+import com.jhlabs.image.ShadowFilter;
+import java.awt.AlphaComposite;
 import java.awt.Color;
+import java.awt.Composite;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
-import java.awt.Shape;
 import java.awt.font.FontRenderContext;
 import java.awt.font.LineBreakMeasurer;
 import java.awt.font.TextAttribute;
@@ -54,6 +61,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.WordUtils;
 import org.imgscalr.Scalr;
+import org.jdesktop.swingx.painter.AbstractPainter;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.input.SAXBuilder;
@@ -64,11 +72,11 @@ import org.slf4j.LoggerFactory;
  *
  * @author Luca Tagliani
  */
-public class TemplateRenderer {
+public class JavaTemplateRenderer {
 
     Pattern pattern = Pattern.compile("%[\\w]*%(\\{[\\w]*\\})*");
 
-    private final static Logger logger = LoggerFactory.getLogger(TemplateRenderer.class);
+    private final static Logger logger = LoggerFactory.getLogger(JavaTemplateRenderer.class);
 
     private String basePath;
     private Map<String, String> tokenMap;
@@ -96,7 +104,7 @@ public class TemplateRenderer {
         File templateFile = new File(templatePath);
 
         // set basePath
-        basePath = templateFile.getParentFile().getAbsolutePath();
+        basePath = templateFile.getParentFile().getAbsolutePath().replaceAll("\\\\", "/");
 
         logger.info("Loading template...");
         // load template
@@ -165,8 +173,8 @@ public class TemplateRenderer {
         Element canvasElement = drawImageTemplateElement.getChild(CANVAS);
         String autoSize = canvasElement.getAttributeValue("AutoSize");
         String centerElements = canvasElement.getAttributeValue("CenterElements");
-        int height = Integer.valueOf(canvasElement.getAttributeValue("Height"));
         int width = Integer.valueOf(canvasElement.getAttributeValue("Width"));
+        int height = Integer.valueOf(canvasElement.getAttributeValue("Height"));
         String fill = canvasElement.getAttributeValue("Fill");
 
         // create image of specified dimensions
@@ -188,9 +196,7 @@ public class TemplateRenderer {
                     break;
             }
         }
-//        g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
-//        g2.setFont(new Font("Chancery Uralic", Font.BOLD, 60));
-//        g2.drawString("Test string", 300, 400);
+
         return new ImagePanel(image);
     }
 
@@ -213,6 +219,7 @@ public class TemplateRenderer {
                 if (StringUtils.isEmpty(sourceData)) {
                     tmpImage = ImageIO.read(new File(nullImageUrl.replaceAll("\\\\", "/")));
                 } else {
+//                    tmpImage = ImageIO.read(new File(sourceData.replaceAll("\\\\", "/")));
                     tmpImage = ImageIO.read(new File(sourceData.replaceAll("\\\\", "/")));
                 }
                 break;
@@ -281,12 +288,11 @@ public class TemplateRenderer {
         String alignment = textElement.getAttributeValue("TextAlignment");
         boolean multiline = Boolean.valueOf(textElement.getAttributeValue("Multiline").toLowerCase());
         boolean antiAlias = textElement.getAttributeValue("TextQuality").equalsIgnoreCase("antialias");
-        if (antiAlias) {
-            g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_VRGB);
-//            g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-        }
+
         Font font = parseFont(textElement.getAttributeValue("Font"));
-        // now get the text
+
+        logger.info("Using font " + font);
+        // now get the textim4java performance
         String text = textElement.getAttributeValue("Text");
         // if text matches pattern of %VARIABLE%{MODIFIER}
         logger.info("parsing token {}", text);
@@ -305,13 +311,20 @@ public class TemplateRenderer {
             FontMetrics fm = g2.getFontMetrics(font);
             Rectangle outlineBounds = fm.getStringBounds(text, g2).getBounds();
 //         we need to create a transparent image to paint
-            tmpImage = new BufferedImage(outlineBounds.width, outlineBounds.height, BufferedImage.TYPE_INT_RGB);
+            tmpImage = new BufferedImage(outlineBounds.width, outlineBounds.height, BufferedImage.TYPE_INT_ARGB);
         }
         Graphics2D g2d = tmpImage.createGraphics();
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
+        g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB);
+//        }
         g2d.setFont(font);
         Color textColor = new Color(Integer.valueOf(textElement.getAttributeValue("ForeColor")));
         g2d.setColor(textColor);
+        Composite comp = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .8f);
+        g2d.setComposite(comp);
         drawString(g2d, text, new Rectangle(0, 0, width, height), Align.valueOf(alignment), 0, multiline);
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
         tmpImage = processActions(textElement, tmpImage);
 
 ////        Graphics2D g2d = tmpImage.createGraphics();
@@ -366,22 +379,21 @@ public class TemplateRenderer {
 //        Shape shape = tl.getOutline(transform);
 //        g2.setClip(shape);
 //        g2.fill(shape.getBounds());
-        if (antiAlias) {
-            // we need to restore antialias to none
-            g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
-        }
+//        if (antiAlias) {
+        // we need to restore antialias to none
+//            g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
+//        }
 //        g2.drawString(text, x, y);
-
         // alway resize
 //        BicubicScaleFilter scaleFilter = new BicubicScaleFilter(width, height);
 //        tmpImage = scaleFilter.filter(tmpImage, null);
         // draw the image to the source
         g2.drawImage(tmpImage, x, y, width, height, null);
-//        try {
-//            ScreenImage.writeImage(tmpImage, "/tmp/images/" + textElement.getAttributeValue("Name") + ".png");
-//        } catch (IOException ex) {
-//
-//        }
+        try {
+            ScreenImage.writeImage(tmpImage, "/tmp/images/" + textElement.getAttributeValue("Name") + ".png");
+        } catch (IOException ex) {
+
+        }
 
     }
 
@@ -391,6 +403,7 @@ public class TemplateRenderer {
         if (actions != null) {
             List<Element> filters = actions.getChildren();
             for (Element filter : filters) {
+                logger.info("Processing action {}", filter.getName());
                 // TODO: implement filters
                 switch (filter.getName()) {
                     // Crop
@@ -398,9 +411,20 @@ public class TemplateRenderer {
                         break;
                     // GlassTable
                     case "GlassTable":
+                        MirrorFilter mirrorFilter = new MirrorFilter();
+                        float reflectionOpacity = Float.valueOf(filter.getAttributeValue("ReflectionOpacity"));
+                        mirrorFilter.setOpacity(reflectionOpacity / 100);
+                        mirrorFilter.setCentreY(1f);
+                        mirrorFilter.setGap(0f);
+                        
+                        tmpImage = mirrorFilter.filter(tmpImage, null);
                         break;
                     // Glow
                     case "Glow":
+                        GlowFilter glowFilter = new GlowFilter();
+                        float amount = Float.valueOf(filter.getAttributeValue("Amount"));
+                        glowFilter.setAmount(amount);
+                        tmpImage = glowFilter.filter(tmpImage, null);
                         break;
                     // GaussianBlur
                     case "GaussianBlur":
@@ -425,24 +449,50 @@ public class TemplateRenderer {
                         break;
                     // AdjustOpacity
                     case "AdjustOpacity":
-                        int opacity = Integer.valueOf(filter.getAttributeValue("Opacity")) * 255 / 100;
-                        OpacityFilter opacityFilter = new OpacityFilter(opacity);
-                        tmpImage = opacityFilter.filter(tmpImage, null);
+//                        int opacity = (int) (Float.valueOf(filter.getAttributeValue("Opacity")) * 255 / 100);
+//                        OpacityFilter opacityFilter = new OpacityFilter(opacity);
+//                        tmpImage = opacityFilter.filter(tmpImage, null);
                         break;
                     // PerspectiveView
                     case "PerspectiveView":
                         break;
                     // Rotate
                     case "Rotate":
+                        RotateFilter rotateFilter = new RotateFilter();
+                        float rotateAngle = Float.valueOf(filter.getAttributeValue("Angle"));
+                        rotateFilter.setAngle(rotateAngle);
+                        tmpImage = rotateFilter.filter(tmpImage, null);
                         break;
                     // DropShadow
                     case "DropShadow":
+                        logger.info("Dropping shadow...");
+                        ShadowFilter shadow = new ShadowFilter();
+                        float angle = Float.valueOf(filter.getAttributeValue("Angle"));
+                        shadow.setAngle(angle);
+                        float distance = Float.valueOf(filter.getAttributeValue("Distance"));
+                        shadow.setDistance(distance);
+                        // shadow.setRadius(3.0f);
+                        float opacity = Float.valueOf(filter.getAttributeValue("Opacity"));
+                        shadow.setOpacity(opacity / 100);
+                        tmpImage = shadow.filter(tmpImage, null);
                         break;
                     // Skew
                     case "Skew":
                         break;
                     // Flip
                     case "Flip":
+                        FlipFilter flipFilter = new FlipFilter();
+                        // Type can be "Horizontal" or "Vertical"
+                        String type = filter.getAttributeValue("Type");
+                        switch (type.toLowerCase()) {
+                            case "horizontal":
+                                flipFilter.setOperation(FlipFilter.FLIP_H);
+                                break;
+                            case "vertical":
+                                flipFilter.setOperation(FlipFilter.FLIP_V);
+                                break;
+                        }
+                        tmpImage = flipFilter.filter(tmpImage, null);
                         break;
 
                 }
@@ -462,8 +512,9 @@ public class TemplateRenderer {
         // TODO: manage unit
         String unit;
         // font name
-        String fontName = fontSpecsArray[0];
+        String fontName = "Droid Sans"; //fontSpecsArray[0];
         int size = Integer.valueOf(fontSpecsArray[1]);
+//        size = (int)Math.round(size * Toolkit.getDefaultToolkit().getScreenResolution() / 72.0);
         if (fontSpecsArray.length > 5) {
             // her we have a full description
             // bold

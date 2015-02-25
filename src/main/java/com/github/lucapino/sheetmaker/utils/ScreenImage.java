@@ -179,34 +179,34 @@ public class ScreenImage {
         String type = fileName.substring(offset + 1);
 
         if (types.contains(type)) {
-            ImageOutputStream ios = ImageIO.createImageOutputStream(new File(fileName));
-            Iterator<ImageWriter> iter = ImageIO.getImageWritersByFormatName("jpeg");
-            ImageWriter writer = iter.next();
-            writer.setOutput(ios);
-            //and metadata
-            IIOMetadata imageMetaData = writer.getDefaultImageMetadata(new ImageTypeSpecifier(image), null);
-
-            int dpi = 96;
-
-            //old metadata
-            //jpegEncodeParam.setDensityUnit(com.sun.image.codec.jpeg.JPEGEncodeParam.DENSITY_UNIT_DOTS_INCH);
-            //jpegEncodeParam.setXDensity(dpi);
-            //jpegEncodeParam.setYDensity(dpi);
-            //new metadata
-            Element tree = (Element) imageMetaData.getAsTree("javax_imageio_jpeg_image_1.0");
-            Element jfif = (Element) tree.getElementsByTagName("app0JFIF").item(0);
-            jfif.setAttribute("Xdensity", Integer.toString(dpi));
-            jfif.setAttribute("Ydensity", Integer.toString(dpi));
-
-            //old compression
-            //jpegEncodeParam.setQuality(JPEGcompression,false);
-            // new Compression
-            JPEGImageWriteParam jpegParams = (JPEGImageWriteParam) writer.getDefaultWriteParam();
-            jpegParams.setCompressionMode(JPEGImageWriteParam.MODE_EXPLICIT);
-            jpegParams.setCompressionQuality(0.85f);
-            writer.write(imageMetaData, new IIOImage(image, null, null), null);
-            writer.dispose();
-//            ImageIO.write(image, type, new File(fileName));
+//            ImageOutputStream ios = ImageIO.createImageOutputStream(new File(fileName));
+//            Iterator<ImageWriter> iter = ImageIO.getImageWritersByFormatName("jpeg");
+//            ImageWriter writer = iter.next();
+//            writer.setOutput(ios);
+//            //and metadata
+//            IIOMetadata imageMetaData = writer.getDefaultImageMetadata(new ImageTypeSpecifier(image), null);
+//
+//            int dpi = 96;
+//
+//            //old metadata
+//            //jpegEncodeParam.setDensityUnit(com.sun.image.codec.jpeg.JPEGEncodeParam.DENSITY_UNIT_DOTS_INCH);
+//            //jpegEncodeParam.setXDensity(dpi);
+//            //jpegEncodeParam.setYDensity(dpi);
+//            //new metadata
+//            Element tree = (Element) imageMetaData.getAsTree("javax_imageio_jpeg_image_1.0");
+//            Element jfif = (Element) tree.getElementsByTagName("app0JFIF").item(0);
+//            jfif.setAttribute("Xdensity", Integer.toString(dpi));
+//            jfif.setAttribute("Ydensity", Integer.toString(dpi));
+//
+//            //old compression
+//            //jpegEncodeParam.setQuality(JPEGcompression,false);
+//            // new Compression
+//            JPEGImageWriteParam jpegParams = (JPEGImageWriteParam) writer.getDefaultWriteParam();
+//            jpegParams.setCompressionMode(JPEGImageWriteParam.MODE_EXPLICIT);
+//            jpegParams.setCompressionQuality(0.85f);
+//            writer.write(imageMetaData, new IIOImage(image, null, null), null);
+//            writer.dispose();
+            ImageIO.write(image, type, new File(fileName));
         } else {
             String message = "unknown writer file suffix (" + type + ")";
             throw new IOException(message);

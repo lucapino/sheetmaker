@@ -30,10 +30,17 @@ package com.github.lucapino.sheetmaker;
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+import com.jhlabs.image.GaussianFilter;
+import com.jhlabs.image.OpacityFilter;
+import com.jhlabs.image.ShadowFilter;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.*;
 import javax.swing.*;
+import org.jdesktop.swingx.JXPanel;
+import org.jdesktop.swingx.painter.AbstractAreaPainter;
+import org.jdesktop.swingx.painter.TextPainter;
+import org.jdesktop.swingx.painter.effects.ShadowPathEffect;
 
 /* 
  * This is like the FontDemo applet in volume 1, except that it 
@@ -240,9 +247,29 @@ public class ShapesDemo2D extends JApplet {
                 System.exit(0);
             }
         });
-        JApplet applet = new ShapesDemo2D();
-        f.getContentPane().add("Center", applet);
-        applet.init();
+//        JApplet applet = new ShapesDemo2D();
+//        f.getContentPane().add("Center", applet);
+//        applet.init();
+        TextPainter text = new TextPainter();
+        text.setFont(new Font("Revofit by Drakoheart", Font.BOLD, 40));
+        text.setText("Password Locker");
+        
+//        ShadowFilter shadow = new ShadowFilter();
+//        shadow.setAngle(-90.0f);
+//        shadow.setDistance(3.0f);
+//        shadow.setRadius(3.0f);
+//        shadow.setOpacity(0.75f);
+//        text.setFilters(shadow);
+//        int opacity = (int) (80 * 255 / 100);
+//        OpacityFilter opacityFilter = new OpacityFilter(opacity);
+//        RenderingHints renderingHints = opacityFilter.getRenderingHints();
+//        text.setFilters(opacityFilter);
+//        text.setAntialiasing(true);
+        
+        JXPanel p = new JXPanel();
+        p.setBackgroundPainter(text);
+        f.getContentPane().add(p);
+
         f.pack();
         f.setSize(new Dimension(550, 100));
         f.setVisible(true);

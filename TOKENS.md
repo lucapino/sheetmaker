@@ -1,4 +1,4 @@
----- To be implemented Tags ----
+---- Implemented Tags ----
  %TITLE%								|	Movie Title 	Inglorious Basterds
  %ORIGINALTITLE%							|	Original movie title 	Inglourious Basterds
  %PLOT%									|	Synopsis 	Some description of the movie.
@@ -49,11 +49,9 @@
  %LANGUAGECODE%								|	The two letter ISO code of the language of the first audio stream 	en
  %CONTAINERTEXT%							|	The detected (mediainfo) container format (as it comes from MediaInfo) 	Matroska
  %CERTIFICATIONTEXT%                                                    |	Movie certification 	PG-13
- %SUBTITLES1%                               |… %SUBTITLES5%		|	Individual embedded subtitles (English names) 	English
  %SUBTITLESTEXT%							|	List of embedded subtitles (Native names) 	English, Francais, Deutsch *
  %EXTERNALSUBTITLESTEXT%                                                |	List of embedded subtitles (Native names) 	English, Francais, Deutsch *
  %EXTERNALSUBTITLES%                                                    |	List of external subtitles (English names) 	English, French *
- %EXTERNALSUBTITLES1%                       |… %EXTERNALSUBTITLES5%	|	Individual external subtitles (English names) 	English
  %RATINGPERCENT%							|	The rating as percent 	68
  %SEASON%								|	The autodetected season number for the current movie 	4
  %EPISODE%								|	The autodetected episode (or CD) number for the current movie 	2
@@ -70,3 +68,8 @@
 ---- TOKENS that can be in a conf file ----
  %PATH%									|	Template folder without trailing backslash 	 C:\ThumbGen\Templates\MyTemplate
  %MOVIEPARENTFOLDER%                                                    |	Current movie parent folder name 	Movies (for c:\Movies\Spread\Spread.2009.mkv)
+
+---- To be implemented Tags ----
+ %SUBTITLES1%                               |… %SUBTITLES5%		|	Individual embedded subtitles (English names) 	English
+ %EXTERNALSUBTITLES1%                       |… %EXTERNALSUBTITLES5%	|	Individual external subtitles (English names) 	English
+ 

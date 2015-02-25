@@ -5,10 +5,12 @@
  */
 package com.github.lucapino.sheetmaker;
 
+import com.github.lucapino.sheetmaker.utils.ScreenImage;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
-import org.im4java.core.ConvertCmd;
-import org.im4java.core.IMOperation;
-import org.im4java.core.MontageCmd;
 import org.testng.annotations.Test;
 
 /**
@@ -20,26 +22,51 @@ public class ImplementationTest {
     @Test
     public void testImplementation() throws Exception {
 
-        
-        IMOperation op = new IMOperation();
-//        op.addImage();
-        op.alpha("Background");
-        op.background("transparent");
-        op.font("Arial");
-        op.fill("Black");
-        op.pointsize(24);
-        op.size(200, 200);
-        op.geometry(200, 200, 200, 200);
-        op.addRawArgs("-define", "pango:justify=true", "pango:\"Contributions to IM Examples are welcome via the IM Forum.\"");
-//        op.addRawArgs("label:Test");
-        op.addImage();
-        ConvertCmd convert = new ConvertCmd();
-        String outfile = "/tmp/fileOut.png";
-        convert.createScript("/tmp/myscript.sh",op);
-        convert.run(op, outfile);
-        
-        
-
+        BufferedImage img = new BufferedImage(500, 500, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = img.createGraphics();
+        g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB);
+        Font font = new Font("Ubuntu", Font.BOLD, 10);
+        g2d.setFont(font);
+        g2d.drawString("Test di stringa", 0, 10);
+        ScreenImage.writeImage(img, "/tmp/images/test.png");
+//        GMService service = new SimpleGMService();
+//        GMConnection connection = service.getConnection();
+//        try {
+//            BufferedImage image = ImageIO.read(this.getClass().getResource("/templates/simplicity/masterbackdrop.png"));
+//            IMOperation op = new IMOperation();
+////            op.addImage();
+////            op.alpha("Background");
+//            op.background("none");
+//            op.font("Ubuntu-Light");
+//            op.fill("white");
+//            op.pointsize(24);
+//            op.size(200, 200);
+//            op.geometry(200, 200, 200, 200);
+//            op.addRawArgs("-define", "pango:justify=true", "pango:<span foreground='white'>\"Contributions to IM Examples are welcome via the IM Forum.\"</span>");
+//            op.addRawArgs("label:Test");
+//            op.addImage();
+//            ConvertCmd convert = new ConvertCmd();
+//            String outfile = "/tmp/fileOut.png";
+//            convert.createScript("/tmp/myscript.sh", op);
+//            convert.run(op, outfile);
+//            String inFile = outfile;
+//            // Composite(image=>$temp, compose=>'src-over', geometry=>$geometry, x=>$composite_x, y=>$composite_y);
+//            convert = new ConvertCmd();
+//            op = new IMOperation();
+//            op.addImage();
+//            
+////            op.geometry(200, 200);
+//            op.gravity("center");
+//            op.addImage();
+//            op.composite();
+//            op.addImage();
+//            outfile = "/tmp/fileOut2.png";
+//            convert.createScript("/tmp/myscript-2.sh", op);
+//            convert.run(op, image, inFile, outfile);
+//            
+//        } finally {
+//            connection.close();
+//        }
 //        TheMovieDbApi api = new TheMovieDbApi(System.getProperty("tmdb.api.key"));
 //        TmdbResultsList<PersonMovieOld> credits = api.getMovieCredits(156022);
 //

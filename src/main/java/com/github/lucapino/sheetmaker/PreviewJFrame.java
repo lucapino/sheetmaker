@@ -12,8 +12,8 @@ import com.github.lucapino.sheetmaker.model.movie.Movie;
 import com.github.lucapino.sheetmaker.parsers.InfoRetriever;
 import com.github.lucapino.sheetmaker.parsers.MovieInfo;
 import com.github.lucapino.sheetmaker.parsers.mediainfo.MediaInfoRetriever;
+import com.github.lucapino.sheetmaker.renderer.JavaTemplateRenderer;
 import com.github.lucapino.sheetmaker.renderer.TemplateFilter;
-import com.github.lucapino.sheetmaker.renderer.TemplateRenderer;
 import com.github.lucapino.sheetmaker.utils.ScreenImage;
 import java.awt.AlphaComposite;
 import java.awt.Color;
@@ -31,10 +31,9 @@ import java.util.Map;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import org.apache.commons.io.IOUtils;
-import org.im4java.core.ConvertCmd;
-import org.im4java.core.IMOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -192,24 +191,28 @@ public class PreviewJFrame extends JFrame {
 ////        System.out.println(time/(1000 * 1000) + " ms");
 //    }
     public static void main(String[] args) {
+        System.setProperty("awt.useSystemAAFontSettings", "on");
+        System.setProperty("swing.aatext", "true");
         SwingUtilities.invokeLater(new Runnable() {
 
             @Override
             public void run() {
                 try {
+                    UIManager.setLookAndFeel(
+                            UIManager.getSystemLookAndFeelClassName());
                     File tmpFolder = new File("/tmp/images");
                     tmpFolder.mkdir();
 
-                    String coverPath = tmpFolder.getAbsolutePath() + "/cover.jpg";
-                    String backdropPath = tmpFolder.getAbsolutePath() + "/backdrop.jpg";
-                    String fanart1Path = tmpFolder.getAbsolutePath() + "/fanart1.jpg";
-                    String fanart2Path = tmpFolder.getAbsolutePath() + "/fanart2.jpg";
-                    String fanart3Path = tmpFolder.getAbsolutePath() + "/fanart3.jpg";
+                    String coverPath = tmpFolder.getAbsolutePath().replaceAll("\\\\", "/") + "/cover.jpg";
+                    String backdropPath = tmpFolder.getAbsolutePath().replaceAll("\\\\", "/") + "/backdrop.jpg";
+                    String fanart1Path = tmpFolder.getAbsolutePath().replaceAll("\\\\", "/") + "/fanart1.jpg";
+                    String fanart2Path = tmpFolder.getAbsolutePath().replaceAll("\\\\", "/") + "/fanart2.jpg";
+                    String fanart3Path = tmpFolder.getAbsolutePath().replaceAll("\\\\", "/") + "/fanart3.jpg";
 
                     PreviewJFrame frame = new PreviewJFrame();
                     logger.info("Creating parser...");
                     InfoRetriever parser = new MediaInfoRetriever();
-                    MovieInfo movieInfo = parser.getMovieInfo("/media/Elements/Film/JackRyan.mkv");
+                    MovieInfo movieInfo = parser.getMovieInfo("/media/tagliani/Elements/Film/JackRyan.mkv");
                     logger.info("Retrieving movie file info...");
                     logger.info("Creating dataretriever...");
                     DataRetriever retriever = new DataRetrieverImpl();
@@ -234,11 +237,11 @@ public class PreviewJFrame extends JFrame {
                     String imageURL = cover.getImageURL();
                     logger.info("Saving cover...");
                     IOUtils.copyLarge(new URL(imageURL).openStream(), new FileOutputStream(coverPath));
-                    
+
                     Map<String, String> tokenMap = TemplateFilter.createTokenMap(movie, movieInfo, null);
-                    
+
                     logger.info("Creating renderer...");
-                    TemplateRenderer renderer = new TemplateRenderer();
+                    JavaTemplateRenderer renderer = new JavaTemplateRenderer();
                     JPanel imagePanel = null;
                     try {
                         logger.info("Rendering image...");
@@ -256,7 +259,7 @@ public class PreviewJFrame extends JFrame {
                     logger.info("Creating image for save...");
                     BufferedImage imageTosave = ScreenImage.createImage(imagePanel);
                     logger.info("Saving image...");
-                    ScreenImage.writeImage(imageTosave, "/tmp/images/final.jpg");
+                    ScreenImage.writeImage(imageTosave, "/tmp/images/final.png");
                     logger.info("Image saved...");
                 } catch (Exception ex) {
                     logger.error("Error: ", ex);
